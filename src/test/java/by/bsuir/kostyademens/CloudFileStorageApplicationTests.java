@@ -1,4 +1,4 @@
-package by.bsuir.kostyademens.cloudFileStorage;
+package by.bsuir.kostyademens;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

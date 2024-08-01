@@ -1,4 +1,4 @@
-package by.bsuir.kostyademens.cloudFileStorage;
+package by.bsuir.kostyademens;
 
 import org.springframework.boot.SpringApplication;
 
