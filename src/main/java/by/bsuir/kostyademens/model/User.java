@@ -1,6 +1,7 @@
 package by.bsuir.kostyademens.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,9 +19,11 @@ public class User {
     private Long id;
 
     @Column(name = "username")
+    @NotEmpty(message = "Username should contain at least 2 letters")
     private String username;
 
     @Column(name = "password")
+    @NotEmpty(message = "Password should contain at least 3 letters")
     private String password;
 
     public User(String username, String password) {
