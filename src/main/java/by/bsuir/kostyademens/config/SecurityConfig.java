@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig{
+public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
 
@@ -24,6 +24,10 @@ public class SecurityConfig{
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/auth/login", "/error").permitAll()
+                        .anyRequest().authenticated()
+                )
                 .formLogin((form) -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/process_login")
