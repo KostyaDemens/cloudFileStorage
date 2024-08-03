@@ -1,6 +1,5 @@
 package by.bsuir.kostyademens.util;
 
-import by.bsuir.kostyademens.exception.UserAlreadyExistsException;
 import by.bsuir.kostyademens.model.User;
 import by.bsuir.kostyademens.repository.UserRepository;
 import org.springframework.stereotype.Component;
@@ -25,9 +24,8 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors) {
         User user = (User) target;
         if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new UserAlreadyExistsException("User with such email already exists");
+            errors.rejectValue("username", "", "User with such username already exists!");
         }
 
-        errors.rejectValue("username", "", "User with such username already exists!");
     }
 }
