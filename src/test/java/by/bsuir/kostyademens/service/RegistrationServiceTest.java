@@ -72,6 +72,8 @@ class RegistrationServiceTest {
                 hasProperty("username", is("admin"))
         ));
 
+        assertThat(users, not(empty()));
+
         assertThat(users, hasSize(1));
     }
 
