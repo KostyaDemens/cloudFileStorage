@@ -61,7 +61,7 @@ class RegistrationServiceTest {
     }
 
     @Test
-    void shouldSaveUserIntoDatabase() {
+    void shouldSaveUserInDatabase() {
         User user = new User("admin", "password");
 
         registrationService.register(user);
