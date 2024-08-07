@@ -18,7 +18,7 @@ public class MinioConfig {
     @Value("${minio.url}")
     private String url;
 
-    @Value("${minio.access.name}")
+    @Value("${minio.access.key}")
     private String accessKey;
 
     @Value("${minio.access.secret}")

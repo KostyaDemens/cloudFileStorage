@@ -1,19 +1,17 @@
 package by.bsuir.kostyademens.security;
 
 import by.bsuir.kostyademens.model.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
 
+@RequiredArgsConstructor
 public class SecureUserDetails implements UserDetails {
 
     private final User user;
-
-    public SecureUserDetails(User user) {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
