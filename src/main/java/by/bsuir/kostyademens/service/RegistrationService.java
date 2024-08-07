@@ -13,11 +13,13 @@ public class RegistrationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SimpleStorageService storageService;
 
 
     @Transactional
     public void register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
+        storageService.createUserFolder(user.getId());
     }
 }
