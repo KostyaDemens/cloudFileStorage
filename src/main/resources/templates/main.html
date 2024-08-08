@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Drag and drop</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+<form th:method="POST" th:action="@{/add}" enctype="multipart/form-data">
+
+    <div class="drop-zone">
+        <span class="drop-zone__prompt">Drop file here or click to upload</span>
+        <input type="file" name="myFile" class="drop-zone__input">
+    </div>
+    <input type="submit" value="try it!"/>
+</form>
+
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

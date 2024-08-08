@@ -1,4 +1,4 @@
-package by.bsuir.kostyademens.security;
+package by.bsuir.kostyademens.model.security;
 
 import by.bsuir.kostyademens.model.User;
 import lombok.RequiredArgsConstructor;

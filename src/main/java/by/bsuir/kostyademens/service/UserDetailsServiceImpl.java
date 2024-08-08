@@ -2,7 +2,7 @@ package by.bsuir.kostyademens.service;
 
 import by.bsuir.kostyademens.model.User;
 import by.bsuir.kostyademens.repository.UserRepository;
-import by.bsuir.kostyademens.security.SecureUserDetails;
+import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
