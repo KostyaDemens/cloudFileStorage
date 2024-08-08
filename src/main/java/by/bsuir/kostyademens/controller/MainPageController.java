@@ -19,10 +19,10 @@ public class MainPageController {
         return "main";
     }
 
-    @PostMapping("/add")
-    public String addFile(@RequestParam ("myFile") MultipartFile file) {
-        storageService.uploadFile(file);
-        return "redirect:/main";
-    }
+//    @PostMapping("/add")
+//    public String addFile(@RequestParam ("file") MultipartFile file) {
+//        storageService.uploadFile(file);
+//        return "redirect:/main";
+//    }
 
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 @Service
 @RequiredArgsConstructor
@@ -57,12 +58,25 @@ public class SimpleStorageService {
 
     @SneakyThrows
     public void uploadFile(MultipartFile file) {
-        PutObjectArgs.builder()
+        minioClient.putObject(
+                PutObjectArgs.builder()
                 .bucket(bucketName)
                 .object(file.getOriginalFilename())
                 .contentType(file.getContentType())
                 .stream(file.getInputStream(), file.getSize(), - 1)
-                .build();
+                .build()
+        );
+    }
+
+    @SneakyThrows
+    public void uploadFolder(String folderName) {
+        minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(folderName + "/")
+                        .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
+                        .build()
+        );
     }
 
     @SneakyThrows
