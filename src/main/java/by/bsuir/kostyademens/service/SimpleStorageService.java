@@ -1,6 +1,8 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.model.User;
 import io.minio.*;
+import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -40,28 +42,12 @@ public class SimpleStorageService {
                         .build());
     }
 
-//    @SneakyThrows
-//    public void createFolder(String objectName) {
-//        PutObjectArgs.builder()
-//                .bucket(bucketName)
-//                .object(objectName)
-//                .build();
-//    }
-//
-//    @SneakyThrows
-//    public void deleteFolder(String objectName) {
-//        RemoveObjectArgs.builder()
-//                .bucket(bucketName)
-//                .object(objectName)
-//                .build();
-//    }
-
     @SneakyThrows
-    public void uploadFile(MultipartFile file) {
+    public void uploadFile(MultipartFile file, String key) {
         minioClient.putObject(
                 PutObjectArgs.builder()
                 .bucket(bucketName)
-                .object(file.getOriginalFilename())
+                .object(key + file.getOriginalFilename())
                 .contentType(file.getContentType())
                 .stream(file.getInputStream(), file.getSize(), - 1)
                 .build()
@@ -85,6 +71,19 @@ public class SimpleStorageService {
                 .bucket(bucketName)
                 .object(objectName)
                 .build();
+    }
+
+    public Iterable<Result<Item>> getAllObjects(User user) {
+        return minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(pathToTheUserFolder(user))
+                        .build()
+        );
+    }
+
+    private String pathToTheUserFolder(User user) {
+        return "user-"+user.getId()+"-files/";
     }
 
 

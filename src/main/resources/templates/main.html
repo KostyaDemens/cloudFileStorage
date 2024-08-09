@@ -6,6 +6,12 @@
     <link rel="stylesheet" th:href="@{/css/main.css}">
 </head>
 <body>
+
+<div th:each="userFile : ${file}">
+    <p th:text="${userFile.get().objectName()}">Text</p>
+</div>
+
+
 <form th:method="POST" th:action="@{/add}" enctype="multipart/form-data">
 
     <div class="drop-zone">
