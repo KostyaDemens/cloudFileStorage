@@ -8,20 +8,25 @@
 <body>
 
 <div th:each="userFile : ${file}">
-    <p th:text="${userFile}">Text</p>
+    <div th:if="${userFile.endsWith('/')}">
+        <a th:href="@{/(path=${userFile})}" th:text="${userFile}">Text</a>
+    </div>
+    <div th:unless="${userFile.endsWith('/')}">
+        <p th:text="${userFile}">Text</p>
+    </div>
 </div>
 
 
-<form th:method="POST" th:action="@{/add}" enctype="multipart/form-data">
+<!--<form th:method="POST" th:action="@{/add}" enctype="multipart/form-data">-->
 
-    <div class="drop-zone">
-        <span class="drop-zone__prompt">Drop file here or click to upload</span>
-        <input type="file" name="file" class="drop-zone__input">
-    </div>
-    <input type="submit" value="try it!"/>
-</form>
+<!--    <div class="drop-zone">-->
+<!--        <span class="drop-zone__prompt">Drop file here or click to upload</span>-->
+<!--        <input type="file" name="file" class="drop-zone__input">-->
+<!--    </div>-->
+<!--    <input type="submit" value="try it!"/>-->
+<!--</form>-->
 
 
-<script th:src="@{/js/main.js}"></script>
+<!--<script th:src="@{/js/main.js}"></script>-->
 </body>
 </html>

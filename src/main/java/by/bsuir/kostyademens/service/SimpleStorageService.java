@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +40,7 @@ public class SimpleStorageService {
                 PutObjectArgs.builder()
                         .bucket(bucketName)
                         .object("user-" + id + "-files/").stream(
-                                new ByteArrayInputStream(new byte[] {}), 0, -1)
+                                new ByteArrayInputStream(new byte[]{}), 0, -1)
                         .build());
     }
 
@@ -47,11 +48,11 @@ public class SimpleStorageService {
     public void uploadFile(MultipartFile file, String key) {
         minioClient.putObject(
                 PutObjectArgs.builder()
-                .bucket(bucketName)
-                .object(key + file.getOriginalFilename())
-                .contentType(file.getContentType())
-                .stream(file.getInputStream(), file.getSize(), - 1)
-                .build()
+                        .bucket(bucketName)
+                        .object(key + file.getOriginalFilename())
+                        .contentType(file.getContentType())
+                        .stream(file.getInputStream(), file.getSize(), -1)
+                        .build()
         );
     }
 
@@ -61,7 +62,7 @@ public class SimpleStorageService {
                 PutObjectArgs.builder()
                         .bucket(bucketName)
                         .object(folderName + "/")
-                        .stream(new ByteArrayInputStream(new byte[] {}), 0, -1)
+                        .stream(new ByteArrayInputStream(new byte[]{}), 0, -1)
                         .build()
         );
     }
@@ -94,28 +95,13 @@ public class SimpleStorageService {
 
 
     @SneakyThrows
-    public List<String> getAllFiles(User user) {
-        List<String> names = new ArrayList<>();
-        String prefix = pathToTheUserFolder(user);
-
-        Iterable<Result<Item>> items = minioClient.listObjects(
+    public Iterable<Result<Item>> getAllFileFromRoot(String prefix) {
+        return minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
                         .prefix(prefix)
                         .build()
         );
-
-        for (Result<Item> item : items) {
-            names.add(item.get().objectName().substring(prefix.length()));
-        }
-
-        return names;
-    }
-
-
-
-    private String pathToTheUserFolder(User user) {
-        return "user-"+user.getId()+"-files/";
     }
 
 
