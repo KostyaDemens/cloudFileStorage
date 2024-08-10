@@ -11,7 +11,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -73,14 +74,45 @@ public class SimpleStorageService {
                 .build();
     }
 
-    public Iterable<Result<Item>> getAllObjects(User user) {
-        return minioClient.listObjects(
-                ListObjectsArgs.builder()
+    @SneakyThrows
+    public void renameFile(String oldName, String newName) {
+        CopySource source = CopySource.builder()
+                .bucket(bucketName)
+                .object(oldName)
+                .build();
+
+        minioClient.copyObject(
+                CopyObjectArgs.builder()
                         .bucket(bucketName)
-                        .prefix(pathToTheUserFolder(user))
+                        .object(newName)
+                        .source(source)
                         .build()
         );
+
+        deleteFile(oldName);
     }
+
+
+    @SneakyThrows
+    public List<String> getAllFiles(User user) {
+        List<String> names = new ArrayList<>();
+        String prefix = pathToTheUserFolder(user);
+
+        Iterable<Result<Item>> items = minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(prefix)
+                        .build()
+        );
+
+        for (Result<Item> item : items) {
+            names.add(item.get().objectName().substring(prefix.length()));
+        }
+
+        return names;
+    }
+
+
 
     private String pathToTheUserFolder(User user) {
         return "user-"+user.getId()+"-files/";

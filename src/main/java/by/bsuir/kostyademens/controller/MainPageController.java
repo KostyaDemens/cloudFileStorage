@@ -23,7 +23,7 @@ public class MainPageController {
     public String mainPage(Model model) {
         model.addAttribute(
                 "file",
-                storageService.getAllObjects(userService.getUserFromContext()
+                storageService.getAllFiles(userService.getUserFromContext()
                 )
         );
 
