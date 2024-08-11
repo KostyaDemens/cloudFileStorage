@@ -7,12 +7,12 @@
 </head>
 <body>
 
-<div th:each="userFile : ${file}">
-    <div th:if="${userFile.endsWith('/')}">
-        <a th:href="@{/(path=${userFile})}" th:text="${userFile}">Text</a>
+<div th:each="itemDto : ${item}">
+    <div th:if="${itemDto.isDir()}">
+        <a th:href="@{/(path=${itemDto.name + '/'})}" th:text="${itemDto.name}"></a>
     </div>
-    <div th:unless="${userFile.endsWith('/')}">
-        <p th:text="${userFile}">Text</p>
+    <div th:unless="${itemDto.isDir()}">
+        <p th:text="${itemDto.name}">Text</p>
     </div>
 </div>
 

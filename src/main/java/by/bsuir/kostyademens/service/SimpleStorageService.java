@@ -1,6 +1,5 @@
 package by.bsuir.kostyademens.service;
 
-import by.bsuir.kostyademens.model.User;
 import io.minio.*;
 import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
@@ -11,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -95,7 +91,7 @@ public class SimpleStorageService {
 
 
     @SneakyThrows
-    public Iterable<Result<Item>> getAllFileFromRoot(String prefix) {
+    public Iterable<Result<Item>> getAllFiles(String prefix) {
         return minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)

@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.dto.ItemDto;
 import by.bsuir.kostyademens.model.User;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,28 +19,38 @@ public class FileService {
     private final SimpleStorageService storageService;
 
     @SneakyThrows
-    public List<String> findAllFilesFromRoot(User user) {
-        List<String> names = new ArrayList<>();
-        String prefix = getPathToTheUserFolder(user);
-        Iterable<Result<Item>> items = storageService.getAllFileFromRoot(prefix);
+    public List<ItemDto> findAllFilesFromRoot(User user, String path) {
+        List<ItemDto> itemDtos = new ArrayList<>();
 
-        for (Result<Item> item : items) {
-            names.add(item.get().objectName());
+        if (path == null) {
+            path = "";
         }
 
-        return names;
+        String prefix = getPrefix(user, path);
+
+        Iterable<Result<Item>> items = storageService.getAllFiles(prefix);
+        for (Result<Item> item : items) {
+            if (item.get().objectName().equals(prefix)) {
+                continue;
+            }
+            String nameWithoutPath = Paths.get(item.get().objectName()).getFileName().toString();
+
+            itemDtos.add(
+                    ItemDto.builder()
+                            .name(nameWithoutPath)
+                            .isDir(item.get().isDir())
+                            .build()
+            );
+
+            System.out.println(Paths.get(item.get().objectName()).getFileName());
+
+        }
+
+        return itemDtos;
     }
 
-    @SneakyThrows
-    public List<String> findAllFilesFromSubfolder(User user, String prefix) {
-        List<String> names = new ArrayList<>();
-        Iterable<Result<Item>> items = storageService.getAllFileFromRoot(getPathToTheUserFolder(user) + prefix + "/");
-
-        for (Result<Item> item : items) {
-            names.add(item.get().objectName());
-        }
-
-        return names;
+    private String getPrefix(User user, String path) {
+        return getPathToTheUserFolder(user) + path;
     }
 
     private String getPathToTheUserFolder(User user) {
