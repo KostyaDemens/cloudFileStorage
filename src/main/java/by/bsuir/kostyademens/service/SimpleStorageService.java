@@ -68,6 +68,18 @@ public class SimpleStorageService {
     }
 
     @SneakyThrows
+    public void downloadFile(String fileName, String filePath) {
+        minioClient.downloadObject(
+                DownloadObjectArgs.builder()
+                .bucket(bucketName)
+                .object(fileName)
+                .filename(filePath)
+                .build()
+        );
+
+    }
+
+    @SneakyThrows
     public void deleteFile(String objectName) {
         RemoveObjectArgs.builder()
                 .bucket(bucketName)

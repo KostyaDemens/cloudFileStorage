@@ -14,8 +14,7 @@
     <div th:unless="${itemDto.isDir()}" style="display: flex; justify-content: space-between; align-items: center;">
         <p th:text="${itemDto.name}" style="margin: 0;">Text</p>
         <!-- Кнопка отправки запроса в контроллер -->
-        <form th:action="@{yourControllerEndpoint}" method="post" style="margin: 0;">
-            <input type="hidden" th:name="filePath" th:value="${itemDto.path}"/>
+        <form th:action="@{/download}" th:method="GET" th:object="${itemDto}" style="margin: 0;">
             <button type="submit">Отправить</button>
         </form>
     </div>

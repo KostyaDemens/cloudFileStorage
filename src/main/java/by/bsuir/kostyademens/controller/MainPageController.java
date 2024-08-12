@@ -1,4 +1,4 @@
-package by.bsuir.kostyademens.controller.main;
+package by.bsuir.kostyademens.controller;
 
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.UserService;
