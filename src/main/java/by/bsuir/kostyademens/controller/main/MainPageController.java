@@ -22,10 +22,8 @@ public class MainPageController {
     public String mainPage(Model model, @RequestParam(value = "path", required = false) String path) {
 
         model.addAttribute(
-                "item", fileService.findAllFilesFromRoot(userService.getUserFromContext(), path)
+                "item", fileService.findAllFilesFromRoot(path)
         );
-
-        System.out.println(path);
 
         return "main";
     }
