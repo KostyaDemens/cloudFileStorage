@@ -69,12 +69,12 @@ public class SimpleStorageService {
     }
 
     @SneakyThrows
-    public void downloadFile(ItemDto item) {
+    public void downloadFile(String objectName, String name) {
         minioClient.downloadObject(
                 DownloadObjectArgs.builder()
                 .bucket(bucketName)
-                .object(item.getFullPath())
-                .filename(item.getName())
+                .object(objectName)
+                .filename(name)
                 .build()
         );
 

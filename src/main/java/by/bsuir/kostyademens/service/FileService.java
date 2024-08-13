@@ -41,4 +41,12 @@ public class FileService {
         }
         return itemDtos;
     }
+
+
+    @SneakyThrows
+    public void downloadFile(ItemDto itemDto) {
+        String homeDir = System.getProperty("user.home") + "/Downloads/";
+
+        storageService.downloadFile(itemDto.getFullPath(), homeDir + itemDto.getName());
+    }
 }
