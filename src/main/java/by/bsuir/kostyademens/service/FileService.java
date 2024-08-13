@@ -1,13 +1,13 @@
 package by.bsuir.kostyademens.service;
 
 import by.bsuir.kostyademens.dto.ItemDto;
+import by.bsuir.kostyademens.model.MinioPath;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,25 +16,25 @@ import java.util.List;
 public class FileService {
 
     private final SimpleStorageService storageService;
-    private final PathService pathService;
 
     @SneakyThrows
-    public List<ItemDto> findAllFilesFromRoot(String path) {
-
-        String prefix = pathService.parse(path);
+    public List<ItemDto> findAllFiles(MinioPath path) {
 
         List<ItemDto> itemDtos = new ArrayList<>();
-        Iterable<Result<Item>> items = storageService.getAllFiles(prefix);
+        Iterable<Result<Item>> items = storageService.getAllFiles(path.getFullPath());
         for (Result<Item> item : items) {
 
-            if (item.get().objectName().equals(prefix)) {
+        String itemName = item.get().objectName();
+
+            if (itemName.equals(path.getFullPath())) {
                 continue;
             }
 
             itemDtos.add(
                     ItemDto.builder()
-                            .name(Paths.get(item.get().objectName()).getFileName().toString())
-                            .path(pathService.cutUserFolder(item.get().objectName()))
+                            .name(path.getFileName(itemName))
+                            .path(path.getPathWithoutUserFolder(itemName))
+                            .fullPath(itemName)
                             .isDir(item.get().isDir())
                             .build()
             );

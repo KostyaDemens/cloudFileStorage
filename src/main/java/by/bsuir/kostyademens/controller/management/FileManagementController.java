@@ -19,8 +19,8 @@ public class FileManagementController {
 
 
     @GetMapping("download")
-    public String downloadFile(@ModelAttribute ItemDto item) {
-        storageService.downloadFile(item.getName(), item.getPath());
-        return "redirect:main.html";
+    public String downloadFile(@ModelAttribute ItemDto itemDto) {
+        storageService.downloadFile(itemDto);
+        return "main";
     }
 }

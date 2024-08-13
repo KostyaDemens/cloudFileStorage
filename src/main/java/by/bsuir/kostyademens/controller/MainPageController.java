@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.controller;
 
+import by.bsuir.kostyademens.model.MinioPath;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,19 +22,14 @@ public class MainPageController {
     @GetMapping
     public String mainPage(Model model, @RequestParam(value = "path", required = false) String path) {
 
+
+
         model.addAttribute(
-                "item", fileService.findAllFilesFromRoot(path)
+                "item", fileService.findAllFiles(new MinioPath(path))
         );
 
         return "main";
     }
-
-//    @GetMapping("")
-//    public String switchFolder(Model model, @RequestParam(value = "path") String prefix) {
-//        model.addAttribute("file",
-//                fileService.findAllFilesFromSubfolder(userService.getUserFromContext(), prefix));
-//        return "main";
-//    }
 
 //    @PostMapping("/add")
 //    public String addFile(@RequestParam("file") MultipartFile file) {

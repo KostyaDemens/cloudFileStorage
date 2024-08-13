@@ -13,9 +13,14 @@
     </div>
     <div th:unless="${itemDto.isDir()}" style="display: flex; justify-content: space-between; align-items: center;">
         <p th:text="${itemDto.name}" style="margin: 0;">Text</p>
+        <p th:text="${itemDto.isDir()}"></p>
         <!-- Кнопка отправки запроса в контроллер -->
         <form th:action="@{/download}" th:method="GET" th:object="${itemDto}" style="margin: 0;">
-            <button type="submit">Отправить</button>
+            <input type="hidden" th:name="name" th:value="${itemDto.name}" />
+            <input type="hidden" th:name="path" th:value="${itemDto.path}" />
+            <input type="hidden" th:name="fullPath" th:value="${itemDto.fullPath}">
+            <input type="hidden" th:name="isDir" th:value="${itemDto.isDir()}" />
+            <button type="submit">Скачать</button>
         </form>
     </div>
 </div>

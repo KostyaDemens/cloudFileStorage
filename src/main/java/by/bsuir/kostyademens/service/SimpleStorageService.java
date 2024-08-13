@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.dto.ItemDto;
 import com.fasterxml.jackson.databind.util.ArrayIterator;
 import io.minio.*;
 import io.minio.messages.Item;
@@ -68,12 +69,12 @@ public class SimpleStorageService {
     }
 
     @SneakyThrows
-    public void downloadFile(String fileName, String filePath) {
+    public void downloadFile(ItemDto item) {
         minioClient.downloadObject(
                 DownloadObjectArgs.builder()
                 .bucket(bucketName)
-                .object(fileName)
-                .filename(filePath)
+                .object(item.getFullPath())
+                .filename(item.getName())
                 .build()
         );
 
