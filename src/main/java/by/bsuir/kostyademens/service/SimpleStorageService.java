@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -68,16 +69,26 @@ public class SimpleStorageService {
         );
     }
 
-    @SneakyThrows
-    public void downloadFile(String objectName, String name) {
-        minioClient.downloadObject(
-                DownloadObjectArgs.builder()
-                .bucket(bucketName)
-                .object(objectName)
-                .filename(name)
-                .build()
-        );
+//    @SneakyThrows
+//    public void downloadFile(String objectName, String name) {
+//        minioClient.downloadObject(
+//                DownloadObjectArgs.builder()
+//                .bucket(bucketName)
+//                .object(objectName)
+//                .filename(name)
+//                .build()
+//        )
+//
+//    }
 
+    @SneakyThrows
+    public InputStream getFile(String objectName) {
+        return minioClient.getObject(
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(objectName)
+                        .build()
+        );
     }
 
     @SneakyThrows
@@ -90,20 +101,16 @@ public class SimpleStorageService {
 
     @SneakyThrows
     public void renameFile(String oldName, String newName) {
-        CopySource source = CopySource.builder()
-                .bucket(bucketName)
-                .object(oldName)
-                .build();
-
         minioClient.copyObject(
                 CopyObjectArgs.builder()
                         .bucket(bucketName)
                         .object(newName)
-                        .source(source)
-                        .build()
-        );
-
-        deleteFile(oldName);
+                        .source(
+                                CopySource.builder()
+                                        .bucket(bucketName)
+                                        .object(oldName)
+                                        .build())
+                        .build());
     }
 
 
