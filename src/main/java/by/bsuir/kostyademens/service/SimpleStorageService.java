@@ -69,18 +69,6 @@ public class SimpleStorageService {
         );
     }
 
-//    @SneakyThrows
-//    public void downloadFile(String objectName, String name) {
-//        minioClient.downloadObject(
-//                DownloadObjectArgs.builder()
-//                .bucket(bucketName)
-//                .object(objectName)
-//                .filename(name)
-//                .build()
-//        )
-//
-//    }
-
     @SneakyThrows
     public InputStream getFile(String objectName) {
         return minioClient.getObject(
@@ -93,14 +81,16 @@ public class SimpleStorageService {
 
     @SneakyThrows
     public void deleteFile(String objectName) {
-        RemoveObjectArgs.builder()
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
                 .bucket(bucketName)
                 .object(objectName)
-                .build();
+                .build()
+        );
     }
 
     @SneakyThrows
-    public void renameFile(String oldName, String newName) {
+    public void renameFile(String newName, String oldName) {
         minioClient.copyObject(
                 CopyObjectArgs.builder()
                         .bucket(bucketName)
@@ -111,6 +101,8 @@ public class SimpleStorageService {
                                         .object(oldName)
                                         .build())
                         .build());
+
+        deleteFile(oldName);
     }
 
 

@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.controller.management;
 
+import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.dto.ItemDto;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
@@ -27,6 +28,7 @@ public class FileManagementController {
 
 
     private final SimpleStorageService storageService;
+    private final FileService fileService;
 
     @SneakyThrows
     @GetMapping("download")
@@ -40,8 +42,9 @@ public class FileManagementController {
 
 
     @PatchMapping("rename")
-    public String rename(@ModelAttribute ItemDto itemDto, @RequestParam String newName) {
+    public String rename(@RequestParam String path, @RequestParam String newName, @RequestParam String oldName) {
 
+        fileService.rename(new FileRenameDto(oldName, newName, path));
         return "main";
     }
 }

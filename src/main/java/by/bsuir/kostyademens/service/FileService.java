@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.dto.ItemDto;
 import by.bsuir.kostyademens.model.MinioPath;
 import io.minio.Result;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,10 +44,24 @@ public class FileService {
         return itemDtos;
     }
 
+    @SneakyThrows
+    public void rename(FileRenameDto fileRenameDto) {
 
-//    @SneakyThrows
-//    public void downloadFile(ItemDto itemDto) {
-//        storageService.downloadFile(itemDto.getFullPath(), itemDto.getName());
-//
-//    }
+        String oldName = fileRenameDto.getOldName();
+        String newName = getPathToTheFileWithoutName(fileRenameDto.getPath(), oldName) + fileRenameDto.getNewName();
+
+        storageService.renameFile(newName, fileRenameDto.getPath());
+
+
+        System.out.println("hi");
+    }
+
+    private String getPathToTheFileWithoutName(String path, String name) {
+        if (path.endsWith("/")) {
+            return null;
+        } else {
+            return path.substring(0, path.length() - name.length());
+        }
+    }
+
 }
