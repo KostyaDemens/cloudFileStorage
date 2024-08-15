@@ -13,7 +13,6 @@
     </div>
     <div th:unless="${itemDto.isDir()}" style="display: flex; justify-content: space-between; align-items: center;">
         <p th:text="${itemDto.name}" style="margin: 0;">Text</p>
-        <p th:text="${itemDto.isDir()}"></p>
 
         <form th:action="@{/download}" th:method="GET" th:object="${itemDto}" style="margin: 0;">
             <input type="hidden" th:name="name" th:value="${itemDto.name}" />
@@ -24,11 +23,10 @@
         </form>
     </div>
 
-    <form th:action="@{/rename}" th:method="PATCH" th:object="${itemDto}" style="margin: 0;">
+    <form th:action="@{/rename}" th:method="PATCH" style="margin: 0;">
         <label for="name">New name</label>
         <input type="text" id="name" name="newName">
-        <input type="hidden" th:name="path" th:value="${itemDto.fullPath}">
-        <input type="hidden" th:name="oldName" th:value="${itemDto.name}">
+        <input type="hidden" th:name="oldPath" th:value="${itemDto.fullPath}">
         <button type="submit">Переименовать</button>
     </form>
 </div>

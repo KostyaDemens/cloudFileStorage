@@ -1,16 +1,12 @@
 package by.bsuir.kostyademens.controller.management;
 
-import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.dto.ItemDto;
+import by.bsuir.kostyademens.dto.ItemRenameDto;
 import by.bsuir.kostyademens.service.FileService;
+import by.bsuir.kostyademens.service.FolderService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
-import java.nio.file.Paths;
 
 @Controller
 @RequiredArgsConstructor
@@ -29,6 +24,7 @@ public class FileManagementController {
 
     private final SimpleStorageService storageService;
     private final FileService fileService;
+    private final FolderService folderService;
 
     @SneakyThrows
     @GetMapping("download")
@@ -42,9 +38,9 @@ public class FileManagementController {
 
 
     @PatchMapping("rename")
-    public String rename(@RequestParam String path, @RequestParam String newName, @RequestParam String oldName) {
+    public String rename(@ModelAttribute ItemRenameDto itemRenameDto) {
 
-        fileService.rename(new FileRenameDto(oldName, newName, path));
+        folderService.rename(itemRenameDto);
         return "main";
     }
 }

@@ -1,15 +1,15 @@
 package by.bsuir.kostyademens.service;
 
-import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.dto.ItemDto;
+import by.bsuir.kostyademens.dto.ItemRenameDto;
 import by.bsuir.kostyademens.model.MinioPath;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class FileService {
         Iterable<Result<Item>> items = storageService.getAllFiles(path.getFullPath());
         for (Result<Item> item : items) {
 
-        String itemName = item.get().objectName();
+            String itemName = item.get().objectName();
 
             if (itemName.equals(path.getFullPath())) {
                 continue;
@@ -45,23 +45,19 @@ public class FileService {
     }
 
     @SneakyThrows
-    public void rename(FileRenameDto fileRenameDto) {
+    public void rename(ItemRenameDto itemDto) {
 
-        String oldName = fileRenameDto.getOldName();
-        String newName = getPathToTheFileWithoutName(fileRenameDto.getPath(), oldName) + fileRenameDto.getNewName();
-
-        storageService.renameFile(newName, fileRenameDto.getPath());
-
-
-        System.out.println("hi");
+        storageService.renameFile(
+                getPathToTheFileWithoutName(itemDto.getOldPath()) + itemDto.getNewName(),
+                itemDto.getOldPath()
+        );
     }
 
-    private String getPathToTheFileWithoutName(String path, String name) {
+    public String getPathToTheFileWithoutName(String path) {
         if (path.endsWith("/")) {
-            return null;
-        } else {
-            return path.substring(0, path.length() - name.length());
+            path = StringUtils.chop(path);
         }
+        return path.substring(0, path.lastIndexOf("/") + 1);
     }
 
 }
