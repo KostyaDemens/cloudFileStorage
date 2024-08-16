@@ -10,7 +10,9 @@ import lombok.Data;
 public class ItemDto {
 
     private String name;
+
     private String path;
     private String fullPath;
+
     private boolean isDir;
 }

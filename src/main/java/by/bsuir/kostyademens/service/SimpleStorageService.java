@@ -116,6 +116,17 @@ public class SimpleStorageService {
         );
     }
 
+    @SneakyThrows
+    public Iterable<Result<Item>> getFilesRecursively(String prefix) {
+        return minioClient.listObjects(
+                ListObjectsArgs.builder()
+                        .bucket(bucketName)
+                        .prefix(prefix)
+                        .recursive(true)
+                        .build()
+        );
+    }
+
 
 
 }
