@@ -4,7 +4,7 @@ import by.bsuir.kostyademens.dto.ItemDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.model.path.MinioPath;
 import by.bsuir.kostyademens.model.User;
-import by.bsuir.kostyademens.util.MinioPathUtil;
+import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class ItemService {
 
         List<ItemDto> itemDtos = new ArrayList<>();
 
-        String userRootFolder = MinioPathUtil.getUserRootPassword(user.getId());
+        String userRootFolder = UserPathUtil.getUserRootPassword(user.getId());
         MinioPath minioPath = new MinioPath(userRootFolder, path);
 
         Iterable<Result<Item>> items = storageService.getAllFiles(minioPath.getPath());
@@ -40,8 +40,8 @@ public class ItemService {
 
                 itemDtos.add(
                         ItemDto.builder()
-                                .name(itemPath.getFileName())
-                                .path(itemPath.getFilePath(userRootFolder))
+                                .name(itemPath.getItemName())
+                                .path(itemPath.getItemPath(userRootFolder))
                                 .fullPath(itemPath.path())
                                 .isDir(item.get().isDir())
                                 .build()

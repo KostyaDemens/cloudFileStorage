@@ -1,17 +1,14 @@
 package by.bsuir.kostyademens.model.path;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-
 import java.nio.file.Paths;
 
 public record ItemPath(String path) {
 
-    public String getFileName() {
+    public String getItemName() {
         return Paths.get(path).getFileName().toString();
     }
 
-    public String getFilePath(String userRootFolder) {
+    public String getItemPath(String userRootFolder) {
         if (path.equals(userRootFolder)) {
             return "/";
         } else {

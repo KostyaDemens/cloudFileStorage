@@ -1,6 +1,8 @@
 package by.bsuir.kostyademens.controller;
 
 import by.bsuir.kostyademens.dto.ItemDownloadDto;
+import by.bsuir.kostyademens.dto.FileRenameDto;
+import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.io.InputStream;
@@ -20,8 +23,9 @@ import java.io.InputStream;
 public class FileController {
 
     private final SimpleStorageService storageService;
+    private final FileService fileService;
 
-    @GetMapping("download")
+    @GetMapping("/download")
     public ResponseEntity<byte[]> download(@ModelAttribute ItemDownloadDto item) {
         try {
             InputStream stream = storageService.getFile(item.getPath());
@@ -33,5 +37,12 @@ public class FileController {
             //TODO Обработать исключение
             throw new RuntimeException();
         }
+    }
+
+    @PatchMapping("/rename")
+    public void rename(@ModelAttribute FileRenameDto item) {
+        fileService.rename(item);
+
+        //TODO Подумать над тем, как можно оставаться на текущей странице
     }
 }

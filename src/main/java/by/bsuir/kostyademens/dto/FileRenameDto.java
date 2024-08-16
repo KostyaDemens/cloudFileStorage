@@ -6,9 +6,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemRenameDto {
+public class FileRenameDto {
 
     private String oldPath;
 
-    private String newName;
+
+    private String newPath;
 }

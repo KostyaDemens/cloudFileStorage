@@ -10,6 +10,13 @@
 <div th:each="item : ${itemDto}">
     <div th:if="${item.isDir()}">
         <a th:href="@{/(path=${item.path})}" th:text="${item.name}"></a>
+        <form th:action="@{/folder/rename}" th:method="PATCH" style="margin: 0;">
+            <label for="newFolderName">New name</label>
+            <input type="text" id="newFolderName" th:name="newName">
+            <input type="hidden" th:name="folderPath" th:value="${item.path}">
+            <input type="hidden" th:name="oldPath" th:value="${item.fullPath}">
+            <button type="submit">Переименовать</button>
+        </form>
     </div>
     <div th:unless="${item.isDir()}" style="display: flex; justify-content: space-between; align-items: center;">
         <p th:text="${item.name}" style="margin: 0;">Text</p>
@@ -19,13 +26,14 @@
             <input type="hidden" th:name="path" th:value="${item.fullPath}" />
             <button type="submit">Скачать</button>
         </form>
+        <form th:action="@{/file/rename}" th:method="PATCH" style="margin: 0;">
+            <label for="newFileName">New name</label>
+            <input type="text" id="newFileName" th:name="newPath">
+            <input type="hidden" th:name="oldPath" th:value="${item.fullPath}">
+            <button type="submit">Переименовать</button>
+        </form>
     </div>
 
-    <form th:action="@{/rename}" th:method="PATCH" style="margin: 0;">
-        <label for="name">New name</label>
-        <input type="text" id="name" name="newName">
-        <button type="submit">Переименовать</button>
-    </form>
 </div>
 
 
