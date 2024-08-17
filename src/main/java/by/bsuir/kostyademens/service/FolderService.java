@@ -1,6 +1,7 @@
 package by.bsuir.kostyademens.service;
 
 import by.bsuir.kostyademens.dto.FolderRenameDto;
+import by.bsuir.kostyademens.dto.ItemDeleteDto;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class FolderService {
+
+    //TODO Обработать ошибки
 
     private final SimpleStorageService storageService;
     private final FileService fileService;
@@ -29,6 +32,15 @@ public class FolderService {
             String newItemPath = oldItemPath.replace(folder.getOldPath(), folder.getNewName());
 
             storageService.renameFile(newItemPath, oldItemPath);
+        }
+    }
+
+    @SneakyThrows
+    public void delete(ItemDeleteDto item) {
+        Iterable<Result<Item>> items = storageService.getAllFiles(item.getFullPath(), true);
+
+        for (Result<Item> itemResult : items) {
+            storageService.deleteFile(itemResult.get().objectName());
         }
     }
 
