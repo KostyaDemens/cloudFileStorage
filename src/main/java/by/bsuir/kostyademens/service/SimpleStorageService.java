@@ -1,7 +1,6 @@
 package by.bsuir.kostyademens.service;
 
-import by.bsuir.kostyademens.dto.ItemDto;
-import com.fasterxml.jackson.databind.util.ArrayIterator;
+
 import io.minio.*;
 import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
@@ -13,9 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Service
 @RequiredArgsConstructor
@@ -113,17 +109,6 @@ public class SimpleStorageService {
                         .bucket(bucketName)
                         .recursive(isRecursive)
                         .prefix(prefix)
-                        .build()
-        );
-    }
-
-    @SneakyThrows
-    public Iterable<Result<Item>> getFilesRecursively(String prefix) {
-        return minioClient.listObjects(
-                ListObjectsArgs.builder()
-                        .bucket(bucketName)
-                        .prefix(prefix)
-                        .recursive(true)
                         .build()
         );
     }

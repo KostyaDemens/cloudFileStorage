@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.controller;
 
+import by.bsuir.kostyademens.dto.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.ItemDownloadDto;
 import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.service.FileService;
@@ -10,10 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.InputStream;
 
@@ -44,5 +42,10 @@ public class FileController {
         fileService.rename(item);
 
         //TODO Подумать над тем, как можно оставаться на текущей странице
+    }
+
+    @DeleteMapping("/delete")
+    public void delete(@ModelAttribute ItemDeleteDto item) {
+        storageService.deleteFile(item.getFullPath());
     }
 }

@@ -22,5 +22,7 @@ public class FolderController {
     @PatchMapping("/rename")
     public void rename(@ModelAttribute FolderRenameDto folder) {
         folderService.rename(folder);
+
+        //TODO то же самое, что и в файл контроллере
     }
 }

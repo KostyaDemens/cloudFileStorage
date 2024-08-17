@@ -5,8 +5,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FolderRenameDto {
-    private String oldPath;
+public class ItemDeleteDto {
 
-    private String newName;
+    private String fullPath;
 }
