@@ -107,10 +107,11 @@ public class SimpleStorageService {
 
 
     @SneakyThrows
-    public Iterable<Result<Item>> getAllFiles(String prefix) {
+    public Iterable<Result<Item>> getAllFiles(String prefix, boolean isRecursive) {
         return minioClient.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
+                        .recursive(isRecursive)
                         .prefix(prefix)
                         .build()
         );

@@ -27,7 +27,7 @@ public class ItemService {
         String userRootFolder = UserPathUtil.getUserRootPassword(user.getId());
         MinioPath minioPath = new MinioPath(userRootFolder, path);
 
-        Iterable<Result<Item>> items = storageService.getAllFiles(minioPath.getPath());
+        Iterable<Result<Item>> items = storageService.getAllFiles(minioPath.getPath(), false);
 
         for (Result<Item> item : items) {
             try {

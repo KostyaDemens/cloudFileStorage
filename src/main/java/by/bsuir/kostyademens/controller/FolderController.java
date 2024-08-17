@@ -20,8 +20,7 @@ public class FolderController {
 
 
     @PatchMapping("/rename")
-    public void rename(@ModelAttribute FolderRenameDto folder,
-    @AuthenticationPrincipal SecureUserDetails userDetails) {
-        folderService.rename(folder, userDetails.getUser());
+    public void rename(@ModelAttribute FolderRenameDto folder) {
+        folderService.rename(folder);
     }
 }
