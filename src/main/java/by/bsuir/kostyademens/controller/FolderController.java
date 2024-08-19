@@ -3,6 +3,7 @@ package by.bsuir.kostyademens.controller;
 import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.dto.FolderRenameDto;
 import by.bsuir.kostyademens.dto.ItemDeleteDto;
+import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.FolderService;
@@ -24,14 +25,32 @@ public class FolderController {
 
 
     @PatchMapping("/rename")
-    public void rename(@ModelAttribute FolderRenameDto folder) {
+    public String rename(@ModelAttribute FolderRenameDto folder) {
         folderService.rename(folder);
 
-        //TODO то же самое, что и в файл контроллере
+        ItemPath path = new ItemPath(folder.getNewName());
+
+        String params = path.getPathWithoutUserFolder();
+
+        if (params.isEmpty()) {
+            return "redirect:/";
+        } else {
+            return "redirect:/?path=" + params;
+        }
     }
 
     @DeleteMapping("/delete")
-    public void delete(@ModelAttribute ItemDeleteDto item) {
+    public String delete(@ModelAttribute ItemDeleteDto item) {
         folderService.delete(item);
+
+        ItemPath path = new ItemPath(item.getFullPath());
+
+        String params = path.getPathWithoutUserFolder();
+
+        if (params.isEmpty()) {
+            return "redirect:/";
+        } else {
+            return "redirect:/?path=" + params;
+        }
     }
 }

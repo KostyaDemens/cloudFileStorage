@@ -66,7 +66,5 @@ public class FileController {
         } else {
             return "redirect:/?path=" + params;
         }
-
-        //TODO удаляется папка, если в ней находится только один файл
     }
 }
