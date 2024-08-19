@@ -37,10 +37,16 @@ public class FolderService {
 
     @SneakyThrows
     public void delete(ItemDeleteDto item) {
+        String prefix = getFolderPrefix(item.getFullPath());
+
         Iterable<Result<Item>> items = storageService.getAllFiles(item.getFullPath(), true);
 
         for (Result<Item> itemResult : items) {
             storageService.deleteFile(itemResult.get().objectName());
+        }
+
+        if (!items.iterator().hasNext()) {
+            storageService.uploadEmptyFolder(prefix);
         }
     }
 

@@ -8,6 +8,7 @@ import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.FolderService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
+import by.bsuir.kostyademens.util.ViewRedirectUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,14 +24,9 @@ public class FolderController {
 
     private final FolderService folderService;
 
-
-    @PatchMapping("/rename")
-    public String rename(@ModelAttribute FolderRenameDto folder) {
-        folderService.rename(folder);
-
-        ItemPath path = new ItemPath(folder.getNewName());
-
-        String params = path.getPathWithoutUserFolder();
+    public String buildRedirectUrl(String path) {
+        ItemPath itemPath = new ItemPath(path);
+        String params = itemPath.getPathWithoutUserFolder();
 
         if (params.isEmpty()) {
             return "redirect:/";
@@ -39,18 +35,18 @@ public class FolderController {
         }
     }
 
+
+    @PatchMapping("/rename")
+    public String rename(@ModelAttribute FolderRenameDto folder) {
+        folderService.rename(folder);
+
+        return ViewRedirectUtil.buildUrl(folder.getNewName());
+    }
+
     @DeleteMapping("/delete")
     public String delete(@ModelAttribute ItemDeleteDto item) {
         folderService.delete(item);
 
-        ItemPath path = new ItemPath(item.getFullPath());
-
-        String params = path.getPathWithoutUserFolder();
-
-        if (params.isEmpty()) {
-            return "redirect:/";
-        } else {
-            return "redirect:/?path=" + params;
-        }
+        return ViewRedirectUtil.buildUrl(item.getFullPath());
     }
 }

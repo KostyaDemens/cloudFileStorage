@@ -6,6 +6,7 @@ import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
+import by.bsuir.kostyademens.util.ViewRedirectUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -42,29 +43,13 @@ public class FileController {
     public String rename(@ModelAttribute FileRenameDto item) {
         fileService.rename(item);
 
-        ItemPath path = new ItemPath(item.getNewPath());
-
-        String params = path.getPathWithoutUserFolder();
-
-        if (params.isEmpty()) {
-            return "redirect:/";
-        } else {
-            return "redirect:/?path=" + params;
-        }
+        return ViewRedirectUtil.buildUrl(item.getNewPath());
     }
 
     @DeleteMapping("/delete")
     public String delete(@ModelAttribute ItemDeleteDto item) {
         fileService.delete(item);
 
-        ItemPath path = new ItemPath(item.getFullPath());
-
-        String params = path.getPathWithoutUserFolder();
-
-        if (params.isEmpty()) {
-            return "redirect:/";
-        } else {
-            return "redirect:/?path=" + params;
-        }
+        return ViewRedirectUtil.buildUrl(item.getFullPath());
     }
 }
