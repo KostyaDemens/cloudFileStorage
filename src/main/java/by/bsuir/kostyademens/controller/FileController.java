@@ -39,14 +39,23 @@ public class FileController {
     }
 
     @PatchMapping("/rename")
-    public void rename(@ModelAttribute FileRenameDto item) {
+    public String rename(@ModelAttribute FileRenameDto item) {
         fileService.rename(item);
-        //TODO Подумать над тем, как можно оставаться на текущей странице
+
+        ItemPath path = new ItemPath(item.getNewPath());
+
+        String params = path.getPathWithoutUserFolder();
+
+        if (params.isEmpty()) {
+            return "redirect:/";
+        } else {
+            return "redirect:/?path=" + params;
+        }
     }
 
     @DeleteMapping("/delete")
     public String delete(@ModelAttribute ItemDeleteDto item) {
-        storageService.deleteFile(item.getFullPath());
+        fileService.delete(item);
 
         ItemPath path = new ItemPath(item.getFullPath());
 

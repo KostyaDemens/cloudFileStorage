@@ -34,7 +34,7 @@ public class ItemService {
 
                 ItemPath itemPath = new ItemPath(item.get().objectName());
 
-                if (itemPath.getPath().equals(userRootFolder)) {
+                if (itemPath.getPath().equals(minioPath.getPath())) {
                     continue;
                 }
 

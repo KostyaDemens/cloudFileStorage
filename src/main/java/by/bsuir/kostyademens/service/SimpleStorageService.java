@@ -55,11 +55,11 @@ public class SimpleStorageService {
     }
 
     @SneakyThrows
-    public void uploadFolder(String folderName) {
+    public void uploadEmptyFolder(String folderName) {
         minioClient.putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(folderName + "/")
+                        .object(folderName)
                         .stream(new ByteArrayInputStream(new byte[]{}), 0, -1)
                         .build()
         );
