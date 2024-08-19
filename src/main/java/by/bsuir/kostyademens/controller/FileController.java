@@ -3,6 +3,7 @@ package by.bsuir.kostyademens.controller;
 import by.bsuir.kostyademens.dto.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.ItemDownloadDto;
 import by.bsuir.kostyademens.dto.FileRenameDto;
+import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
 import lombok.RequiredArgsConstructor;
@@ -40,12 +41,23 @@ public class FileController {
     @PatchMapping("/rename")
     public void rename(@ModelAttribute FileRenameDto item) {
         fileService.rename(item);
-
         //TODO Подумать над тем, как можно оставаться на текущей странице
     }
 
     @DeleteMapping("/delete")
-    public void delete(@ModelAttribute ItemDeleteDto item) {
+    public String delete(@ModelAttribute ItemDeleteDto item) {
         storageService.deleteFile(item.getFullPath());
+
+        ItemPath path = new ItemPath(item.getFullPath());
+
+        String params = path.getPathWithoutUserFolder();
+
+        if (params.isEmpty()) {
+            return "redirect:/";
+        } else {
+            return "redirect:/?path=" + params;
+        }
+
+        //TODO удаляется папка, если в ней находится только один файл
     }
 }

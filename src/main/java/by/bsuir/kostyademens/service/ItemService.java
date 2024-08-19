@@ -34,15 +34,15 @@ public class ItemService {
 
                 ItemPath itemPath = new ItemPath(item.get().objectName());
 
-                if (itemPath.path().equals(userRootFolder)) {
+                if (itemPath.getPath().equals(userRootFolder)) {
                     continue;
                 }
 
                 itemDtos.add(
                         ItemDto.builder()
                                 .name(itemPath.getItemName())
-                                .path(itemPath.getItemPath(userRootFolder))
-                                .fullPath(itemPath.path())
+                                .path(itemPath. getItemPath(userRootFolder))
+                                .fullPath(itemPath.getPath())
                                 .isDir(item.get().isDir())
                                 .build()
                 );
