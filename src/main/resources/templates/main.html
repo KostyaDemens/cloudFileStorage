@@ -7,6 +7,15 @@
 </head>
 <body>
 
+<div>
+    <p>
+        <span th:each="entry : ${breadcrumbs}">
+            <a th:if="${entry.value == 'Home'}" th:href="@{/}" th:text="${entry.value}"></a>
+            <a th:unless="${entry.value == 'Home'}" th:href="@{/(path=${entry.key})}" th:text="${entry.value}"></a>
+            <span>/</span>
+        </span>
+    </p>
+</div>
 <div th:each="item : ${itemDto}">
     <div th:if="${item.isDir()}">
         <a th:href="@{/(path=${item.path})}" th:text="${item.name}"></a>
