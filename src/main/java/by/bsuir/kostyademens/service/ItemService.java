@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -58,11 +57,43 @@ public class ItemService {
                 );
 
             } catch (Exception e) {
-                //TODO Обработать ислкючение / Выкинуть кастомное
                 throw new RuntimeException();
             }
         }
         return itemDtos;
+    }
+
+    public List<ItemDto> search(String query, User user) {
+        List<ItemDto> itemDtos = new ArrayList<>();
+
+        String userRootFolder = UserPathUtil.getUserRootPassword(user.getId());
+
+        Iterable<Result<Item>> items = storageService.getAllFiles(userRootFolder, true);
+
+        for (Result<Item> item : items) {
+            try {
+
+                ItemPath itemPath = new ItemPath(item.get().objectName());
+
+                if (itemPath.getItemName().toLowerCase().contains(query)) {
+                    itemDtos.add(
+                            ItemDto.builder()
+                                    .name(itemPath.getItemName())
+                                    .path(itemPath.getItemPath(userRootFolder))
+                                    .fullPath(itemPath.getPath())
+                                    .isDir(item.get().isDir())
+                                    .build()
+                    );
+                }
+
+
+            } catch (Exception e) {
+                throw new RuntimeException();
+            }
+        }
+        return itemDtos;
+
+
     }
 
 }

@@ -50,9 +50,13 @@
             <button type="submit">Удалить</button>
         </form>
     </div>
-
-
 </div>
+
+<form th:method="GET" th:action="@{/search/}">
+    <label for="query"></label>
+    <input type="text" id="query" name="query">
+    <button type="submit">Search</button>
+</form>
 
 
 <form th:method="POST" th:action="@{/add}" enctype="multipart/form-data">

@@ -1,7 +1,6 @@
 package by.bsuir.kostyademens.controller;
 
 import by.bsuir.kostyademens.dto.ItemDto;
-import by.bsuir.kostyademens.model.BreadCrumb;
 import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -38,6 +36,23 @@ public class MainPageController {
         model.addAttribute("breadcrumbs", breadCrumbs);
 
         return "main";
+    }
+
+    @GetMapping("/search/")
+    public String search(@RequestParam(value = "query") String query,
+                         @AuthenticationPrincipal SecureUserDetails userDetails,
+                         Model model) {
+
+        if (query.isEmpty()) {
+            return "redirect:/";
+        }
+
+        List<ItemDto> items = itemService.search(query.toLowerCase(), userDetails.getUser());
+
+        model.addAttribute("itemDto", items);
+
+        return "main";
+
     }
 
 //    @PostMapping("/add")
