@@ -1,7 +1,10 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.dto.FolderCreateDto;
 import by.bsuir.kostyademens.dto.FolderRenameDto;
 import by.bsuir.kostyademens.dto.ItemDeleteDto;
+import by.bsuir.kostyademens.model.User;
+import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +19,6 @@ public class FolderService {
     //TODO Обработать ошибки
 
     private final SimpleStorageService storageService;
-    private final FileService fileService;
-
 
     @SneakyThrows
     public void rename(FolderRenameDto folder) {
@@ -48,6 +49,16 @@ public class FolderService {
         if (!items.iterator().hasNext()) {
             storageService.uploadEmptyFolder(prefix);
         }
+    }
+
+    public void createFolder(FolderCreateDto folder, User user) {
+        String userFolder = UserPathUtil.getUserRootPassword(user.getId());
+
+        String folderLocation = userFolder + folder.getFolderLocation() + folder.getName();
+
+        folder.setFolderLocation(folderLocation);
+
+        storageService.uploadEmptyFolder(folderLocation + "/");
     }
 
     private String getFolderPrefix(String path) {

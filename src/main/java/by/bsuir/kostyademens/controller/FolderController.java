@@ -1,15 +1,16 @@
 package by.bsuir.kostyademens.controller;
 
+import by.bsuir.kostyademens.dto.FolderCreateDto;
 import by.bsuir.kostyademens.dto.FolderRenameDto;
 import by.bsuir.kostyademens.dto.ItemDeleteDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
+import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FolderService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/folder")
@@ -34,6 +35,18 @@ public class FolderController {
         folderService.delete(item);
 
         ItemPath path = new ItemPath(item.getFullPath());
+        String params = path.getPathWithoutUserFolder();
+
+        return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+    }
+
+    @PostMapping("/add")
+    public String add(@ModelAttribute FolderCreateDto folder,
+                      @AuthenticationPrincipal SecureUserDetails userDetails) {
+
+        folderService.createFolder(folder, userDetails.getUser());
+
+        ItemPath path = new ItemPath(folder.getFolderLocation());
         String params = path.getPathWithoutUserFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
