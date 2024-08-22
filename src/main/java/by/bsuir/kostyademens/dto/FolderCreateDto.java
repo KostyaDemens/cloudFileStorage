@@ -10,4 +10,6 @@ public class FolderCreateDto {
     private String name;
 
     private String folderLocation;
+
+    private Long ownerId;
 }

@@ -4,6 +4,7 @@ import by.bsuir.kostyademens.dto.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.ItemDownloadDto;
 import by.bsuir.kostyademens.dto.FileRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
+import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
 import lombok.RequiredArgsConstructor;
@@ -11,8 +12,10 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 
@@ -56,5 +59,15 @@ public class FileController {
         String params = path.getPathWithoutUserFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+    }
+
+    @PostMapping("/upload")
+    public String upload(@RequestParam("file") MultipartFile file,
+                         @AuthenticationPrincipal SecureUserDetails userDetails,
+                         @RequestParam("key") String key) {
+
+        fileService.upload(file, key, userDetails.getUser());
+
+        return "redirect:/";
     }
 }

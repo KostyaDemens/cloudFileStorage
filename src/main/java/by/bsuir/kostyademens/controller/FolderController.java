@@ -41,10 +41,9 @@ public class FolderController {
     }
 
     @PostMapping("/add")
-    public String add(@ModelAttribute FolderCreateDto folder,
-                      @AuthenticationPrincipal SecureUserDetails userDetails) {
+    public String add(@ModelAttribute FolderCreateDto folder) {
 
-        folderService.createFolder(folder, userDetails.getUser());
+        folderService.createFolder(folder);
 
         ItemPath path = new ItemPath(folder.getFolderLocation());
         String params = path.getPathWithoutUserFolder();

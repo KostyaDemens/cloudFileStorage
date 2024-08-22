@@ -36,7 +36,8 @@ public class MainPageController {
 
         model.addAttribute("itemDto", items);
         model.addAttribute("breadcrumbs", breadCrumbs);
-        model.addAttribute("folderLocation", path);
+        model.addAttribute("owner", userDetails.getUser());
+        model.addAttribute("url", path);
 
         return "main";
     }
@@ -56,13 +57,6 @@ public class MainPageController {
 
         return "main";
 
-    }
-
-    @PostMapping("/add")
-    public String addFile(@RequestParam("file") MultipartFile file) {
-
-
-        return "redirect:/";
     }
 
 }

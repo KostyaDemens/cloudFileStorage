@@ -51,8 +51,8 @@ public class FolderService {
         }
     }
 
-    public void createFolder(FolderCreateDto folder, User user) {
-        String userFolder = UserPathUtil.getUserRootPassword(user.getId());
+    public void createFolder(FolderCreateDto folder) {
+        String userFolder = UserPathUtil.getUserRootPassword(folder.getOwnerId());
 
         String folderLocation = userFolder + folder.getFolderLocation() + folder.getName();
 
