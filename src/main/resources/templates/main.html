@@ -74,7 +74,8 @@
         <span class="drop-zone__prompt">Drop file here or click to upload</span>
         <input type="file" name="file" class="drop-zone__input">
     </div>
-    <input type="hidden" th:value="${url}" name="key">
+    <input type="hidden" th:value="${url}" th:name="path"/>
+    <input type="hidden" th:value="${owner.id}" th:name="ownerId"/>
     <input type="submit" value="post"/>
 </form>
 

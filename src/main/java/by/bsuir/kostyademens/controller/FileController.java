@@ -1,8 +1,9 @@
 package by.bsuir.kostyademens.controller;
 
-import by.bsuir.kostyademens.dto.ItemDeleteDto;
-import by.bsuir.kostyademens.dto.ItemDownloadDto;
-import by.bsuir.kostyademens.dto.FileRenameDto;
+import by.bsuir.kostyademens.dto.file.FileUploadDto;
+import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
+import by.bsuir.kostyademens.dto.item.ItemDownloadDto;
+import by.bsuir.kostyademens.dto.file.FileRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FileService;
@@ -63,11 +64,10 @@ public class FileController {
 
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file,
-                         @AuthenticationPrincipal SecureUserDetails userDetails,
-                         @RequestParam("key") String key) {
+                         @ModelAttribute FileUploadDto fileUpload) {
 
-        fileService.upload(file, key, userDetails.getUser());
+        fileService.upload(file, fileUpload);
 
-        return "redirect:/";
+        return "redirect:/" + ((fileUpload.getPath().isEmpty() ? "" : "?path=" + fileUpload.getPath()));
     }
 }

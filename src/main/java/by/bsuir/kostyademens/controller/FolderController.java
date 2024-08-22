@@ -1,14 +1,11 @@
 package by.bsuir.kostyademens.controller;
 
-import by.bsuir.kostyademens.dto.FolderCreateDto;
-import by.bsuir.kostyademens.dto.FolderRenameDto;
-import by.bsuir.kostyademens.dto.ItemDeleteDto;
+import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
+import by.bsuir.kostyademens.dto.folder.FolderRenameDto;
+import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
-import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FolderService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

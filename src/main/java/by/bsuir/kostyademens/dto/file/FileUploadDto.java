@@ -1,12 +1,13 @@
-package by.bsuir.kostyademens.dto;
+package by.bsuir.kostyademens.dto.file;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ItemDownloadDto {
+public class FileUploadDto {
+
+    private Long ownerId;
 
     private String path;
-    private String name;
 }

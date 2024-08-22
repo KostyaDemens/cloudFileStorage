@@ -1,4 +1,4 @@
-package by.bsuir.kostyademens.dto;
+package by.bsuir.kostyademens.dto.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

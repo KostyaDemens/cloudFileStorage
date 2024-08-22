@@ -1,6 +1,6 @@
 package by.bsuir.kostyademens.service;
 
-import by.bsuir.kostyademens.dto.ItemDto;
+import by.bsuir.kostyademens.dto.item.ItemDto;
 import by.bsuir.kostyademens.model.BreadCrumb;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.model.path.MinioPath;

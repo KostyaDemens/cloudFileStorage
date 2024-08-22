@@ -1,7 +1,8 @@
 package by.bsuir.kostyademens.service;
 
-import by.bsuir.kostyademens.dto.FileRenameDto;
-import by.bsuir.kostyademens.dto.ItemDeleteDto;
+import by.bsuir.kostyademens.dto.file.FileRenameDto;
+import by.bsuir.kostyademens.dto.file.FileUploadDto;
+import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.model.User;
 import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
@@ -35,8 +36,8 @@ public class FileService {
         }
     }
 
-    public void upload(MultipartFile file, String key, User user) {
-        key = UserPathUtil.getUserRootPassword(user.getId()) + key;
+    public void upload(MultipartFile file, FileUploadDto fileUpload) {
+        String key = UserPathUtil.getUserRootPassword(fileUpload.getOwnerId()) + fileUpload.getPath();
 
         storageService.uploadFile(file, key);
     }

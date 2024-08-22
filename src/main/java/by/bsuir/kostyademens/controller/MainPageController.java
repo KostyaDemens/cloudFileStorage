@@ -1,6 +1,6 @@
 package by.bsuir.kostyademens.controller;
 
-import by.bsuir.kostyademens.dto.ItemDto;
+import by.bsuir.kostyademens.dto.item.ItemDto;
 import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.ItemService;
 import lombok.RequiredArgsConstructor;
@@ -8,10 +8,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.LinkedHashMap;
 import java.util.List;
