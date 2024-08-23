@@ -79,6 +79,16 @@
     <input type="submit" value="post"/>
 </form>
 
+<form th:method="POST" th:action="@{/folder/upload}" enctype="multipart/form-data">
+    <div class="drop-zone">
+        <span class="drop-zone__prompt">Drop folder here or click to upload</span>
+        <input type="file" name="files" class="drop-zone__input" multiple webkitdirectory>
+    </div>
+    <input type="hidden" th:value="${url}" th:name="path"/>
+    <input type="hidden" th:value="${owner.id}" th:name="ownerId"/>
+    <input type="submit" value="post"/>
+</form>
+
 
 <script th:src="@{/js/main.js}"></script>
 </body>

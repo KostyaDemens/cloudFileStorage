@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.controller;
 
+import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
 import by.bsuir.kostyademens.dto.folder.FolderRenameDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
@@ -8,6 +9,9 @@ import by.bsuir.kostyademens.service.FolderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/folder")
@@ -46,5 +50,14 @@ public class FolderController {
         String params = path.getPathWithoutUserFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+    }
+
+    @PostMapping("/upload")
+    public String upload(@RequestParam("files") List<MultipartFile> files,
+                         @ModelAttribute FileUploadDto fileUpload) {
+
+        folderService.upload(files, fileUpload);
+
+        return "redirect:/" + ((fileUpload.getPath().isEmpty() ? "" : "?path=" + fileUpload.getPath()));
     }
 }

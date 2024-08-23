@@ -15,4 +15,6 @@ public class ItemDto {
     private String fullPath;
 
     private boolean isDir;
+
+    //TODO - добавить валидацю введеных названий папок и т.д
 }

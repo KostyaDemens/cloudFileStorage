@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
 import by.bsuir.kostyademens.dto.folder.FolderRenameDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
@@ -10,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +23,7 @@ public class FolderService {
     //TODO Обработать ошибки
 
     private final SimpleStorageService storageService;
+    private final FileService fileService;
 
     @SneakyThrows
     public void rename(FolderRenameDto folder) {
@@ -58,6 +64,13 @@ public class FolderService {
         folder.setFolderLocation(folderLocation);
 
         storageService.uploadEmptyFolder(folderLocation + "/");
+    }
+
+    public void upload(List<MultipartFile> files, FileUploadDto fileUpload) {
+        String key = UserPathUtil.getUserRootPassword(fileUpload.getOwnerId()) + fileUpload.getPath();
+        for (MultipartFile file : files) {
+            storageService.uploadFile(file, key);
+        }
     }
 
     private String getFolderPrefix(String path) {
