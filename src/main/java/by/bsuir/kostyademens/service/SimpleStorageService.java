@@ -1,11 +1,12 @@
 package by.bsuir.kostyademens.service;
 
 
+import by.bsuir.kostyademens.exception.BucketInitializationException;
+import by.bsuir.kostyademens.exception.MinioOperationException;
 import io.minio.*;
 import io.minio.messages.Item;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,87 +23,118 @@ public class SimpleStorageService {
     @Value("${minio.bucket.name}")
     private String bucketName;
 
-    @SneakyThrows
+
     @PostConstruct
     private void init() {
-        boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
-        if (!found) {
-            minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+        try {
+            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
+            if (!found) {
+                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
+            }
+        } catch (Exception e) {
+            throw new BucketInitializationException("Failed to initialize bucket: " + bucketName);
         }
     }
 
 
-    @SneakyThrows
     public void createUserFolder(Long id) {
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object("user-" + id + "-files/").stream(
-                                new ByteArrayInputStream(new byte[]{}), 0, -1)
-                        .build());
+        try {
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object("user-" + id + "-files/").stream(
+                                    new ByteArrayInputStream(new byte[]{}), 0, -1)
+                            .build());
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to create user folder");
+        }
     }
 
-    @SneakyThrows
+
     public void uploadFile(MultipartFile file, String key) {
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(key + file.getOriginalFilename())
-                        .contentType(file.getContentType())
-                        .stream(file.getInputStream(), file.getSize(), -1)
-                        .build()
-        );
+        try {
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(key + file.getOriginalFilename())
+                            .contentType(file.getContentType())
+                            .stream(file.getInputStream(), file.getSize(), -1)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to upload file to MinIO bucket");
+        }
     }
 
-    @SneakyThrows
+
     public void uploadEmptyFolder(String folderName) {
-        minioClient.putObject(
-                PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(folderName)
-                        .stream(new ByteArrayInputStream(new byte[]{}), 0, -1)
-                        .build()
-        );
+        try {
+
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(folderName)
+                            .stream(new ByteArrayInputStream(new byte[]{}), 0, -1)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to upload folder to MinIO bucket");
+        }
     }
 
-    @SneakyThrows
+
     public InputStream getFile(String objectName) {
-        return minioClient.getObject(
-                GetObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(objectName)
-                        .build()
-        );
+        try {
+
+            return minioClient.getObject(
+                    GetObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to retrieve file from MinIO bucket");
+        }
     }
 
-    @SneakyThrows
+
     public void deleteFile(String objectName) {
-        minioClient.removeObject(
-                RemoveObjectArgs.builder()
-                .bucket(bucketName)
-                .object(objectName)
-                .build()
-        );
+        try {
+
+            minioClient.removeObject(
+                    RemoveObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to delete file from MinIO bucket");
+        }
     }
 
-    @SneakyThrows
+
     public void renameFile(String newName, String oldName) {
-        minioClient.copyObject(
-                CopyObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(newName)
-                        .source(
-                                CopySource.builder()
-                                        .bucket(bucketName)
-                                        .object(oldName)
-                                        .build())
-                        .build());
+        try {
 
-        deleteFile(oldName);
+            minioClient.copyObject(
+                    CopyObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(newName)
+                            .source(
+                                    CopySource.builder()
+                                            .bucket(bucketName)
+                                            .object(oldName)
+                                            .build())
+                            .build());
+
+            deleteFile(oldName);
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to rename file");
+        }
     }
 
 
-    @SneakyThrows
     public Iterable<Result<Item>> getAllFiles(String prefix, boolean isRecursive) {
         return minioClient.listObjects(
                 ListObjectsArgs.builder()
@@ -112,7 +144,4 @@ public class SimpleStorageService {
                         .build()
         );
     }
-
-
-
 }
