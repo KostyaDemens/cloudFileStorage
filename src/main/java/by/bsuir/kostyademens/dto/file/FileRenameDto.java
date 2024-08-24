@@ -10,6 +10,5 @@ public class FileRenameDto {
 
     private String oldPath;
 
-
     private String newPath;
 }

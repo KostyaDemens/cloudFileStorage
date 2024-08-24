@@ -11,7 +11,6 @@ import java.util.LinkedHashMap;
 
 import static org.hamcrest.Matchers.equalTo;
 
-@RequiredArgsConstructor
 class BreadCrumbTest {
 
     private static BreadCrumb breadCrumb;

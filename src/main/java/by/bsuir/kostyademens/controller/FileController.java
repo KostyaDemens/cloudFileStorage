@@ -5,7 +5,6 @@ import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemDownloadDto;
 import by.bsuir.kostyademens.dto.file.FileRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
-import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +12,6 @@ import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,7 +45,7 @@ public class FileController {
         fileService.rename(item);
 
         ItemPath path = new ItemPath(item.getNewPath());
-        String params = path.getPathWithoutUserFolder();
+        String params = path.getPathWithoutUserAndCurrentFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
@@ -57,7 +55,7 @@ public class FileController {
         fileService.delete(item);
 
         ItemPath path = new ItemPath(item.getFullPath());
-        String params = path.getPathWithoutUserFolder();
+        String params = path.getPathWithoutUserAndCurrentFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }

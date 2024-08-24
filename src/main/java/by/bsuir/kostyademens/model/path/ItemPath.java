@@ -24,7 +24,7 @@ public class ItemPath {
         }
     }
 
-    public String getPathWithoutUserFolder() {
+    public String getPathWithoutUserAndCurrentFolder() {
         path = path.substring(path.indexOf("/") + 1);
         if (path.endsWith("/")) {
             String truncatedPath = StringUtils.chop(path);

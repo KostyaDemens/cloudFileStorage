@@ -26,7 +26,7 @@ public class FolderController {
         folderService.rename(folder);
 
         ItemPath path = new ItemPath(folder.getNewName());
-        String params = path.getPathWithoutUserFolder();
+        String params = path.getPathWithoutUserAndCurrentFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
@@ -36,7 +36,7 @@ public class FolderController {
         folderService.delete(item);
 
         ItemPath path = new ItemPath(item.getFullPath());
-        String params = path.getPathWithoutUserFolder();
+        String params = path.getPathWithoutUserAndCurrentFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
@@ -47,7 +47,7 @@ public class FolderController {
         folderService.createFolder(folder);
 
         ItemPath path = new ItemPath(folder.getFolderLocation());
-        String params = path.getPathWithoutUserFolder();
+        String params = path.getPathWithoutUserAndCurrentFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }

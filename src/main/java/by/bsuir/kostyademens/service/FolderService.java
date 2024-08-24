@@ -23,7 +23,6 @@ public class FolderService {
     //TODO Обработать ошибки
 
     private final SimpleStorageService storageService;
-    private final FileService fileService;
 
     @SneakyThrows
     public void rename(FolderRenameDto folder) {
