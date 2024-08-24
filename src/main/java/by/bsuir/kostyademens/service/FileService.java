@@ -3,7 +3,6 @@ package by.bsuir.kostyademens.service;
 import by.bsuir.kostyademens.dto.file.FileRenameDto;
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
-import by.bsuir.kostyademens.model.User;
 import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
