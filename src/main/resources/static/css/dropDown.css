@@ -1,0 +1,8 @@
+.dropdown-menu {
+    min-width: 100%;
+}
+
+.dropdown-menu > li > a {
+    display: flex;
+    align-items: center;
+}

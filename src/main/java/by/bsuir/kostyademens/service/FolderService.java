@@ -2,8 +2,8 @@ package by.bsuir.kostyademens.service;
 
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
-import by.bsuir.kostyademens.dto.folder.FolderRenameDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
+import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,8 +24,8 @@ public class FolderService {
     private final SimpleStorageService storageService;
 
     @SneakyThrows
-    public void rename(FolderRenameDto folder) {
-        folder.setNewName(getFolderPrefix(folder.getOldPath()) + folder.getNewName() + "/");
+    public void rename(ItemRenameDto folder) {
+        folder.setNewPath(getFolderPrefix(folder.getOldPath()) + folder.getNewPath() + "/");
 
         Iterable<Result<Item>> items = storageService.getAllFiles(folder.getOldPath(), true);
 
@@ -34,7 +33,7 @@ public class FolderService {
 
             String oldItemPath = item.get().objectName();
 
-            String newItemPath = oldItemPath.replace(folder.getOldPath(), folder.getNewName());
+            String newItemPath = oldItemPath.replace(folder.getOldPath(), folder.getNewPath());
 
             storageService.renameFile(newItemPath, oldItemPath);
         }

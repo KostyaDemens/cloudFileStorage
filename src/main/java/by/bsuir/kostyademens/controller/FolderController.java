@@ -2,8 +2,8 @@ package by.bsuir.kostyademens.controller;
 
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
-import by.bsuir.kostyademens.dto.folder.FolderRenameDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
+import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FolderService;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +22,10 @@ public class FolderController {
 
 
     @PatchMapping("/rename")
-    public String rename(@ModelAttribute FolderRenameDto folder) {
-        folderService.rename(folder);
+    public String rename(@ModelAttribute ItemRenameDto item) {
+        folderService.rename(item);
 
-        ItemPath path = new ItemPath(folder.getNewName());
+        ItemPath path = new ItemPath(item.getNewPath());
         String params = path.getPathWithoutUserAndCurrentFolder();
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));

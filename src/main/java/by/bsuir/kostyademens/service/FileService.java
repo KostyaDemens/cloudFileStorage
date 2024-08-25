@@ -1,8 +1,8 @@
 package by.bsuir.kostyademens.service;
 
-import by.bsuir.kostyademens.dto.file.FileRenameDto;
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
+import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -16,7 +16,7 @@ public class FileService {
 
     private final SimpleStorageService storageService;
 
-    public void rename(FileRenameDto item) {
+    public void rename(ItemRenameDto item) {
 
         item.setNewPath(getFilePrefix(item.getOldPath()) + item.getNewPath());
 

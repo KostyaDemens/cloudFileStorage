@@ -1,12 +1,13 @@
-package by.bsuir.kostyademens.dto.folder;
+package by.bsuir.kostyademens.dto.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FolderRenameDto {
+public class ItemRenameDto {
+
     private String oldPath;
 
-    private String newName;
+    private String newPath;
 }

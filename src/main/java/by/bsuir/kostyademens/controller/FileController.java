@@ -3,7 +3,7 @@ package by.bsuir.kostyademens.controller;
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemDownloadDto;
-import by.bsuir.kostyademens.dto.file.FileRenameDto;
+import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
@@ -41,7 +41,8 @@ public class FileController {
     }
 
     @PatchMapping("/rename")
-    public String rename(@ModelAttribute FileRenameDto item) {
+    public String rename(@ModelAttribute ItemRenameDto item) {
+
         fileService.rename(item);
 
         ItemPath path = new ItemPath(item.getNewPath());
