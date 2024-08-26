@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.service;
 
+import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,7 +25,7 @@ class FileServiceTest {
 
     @Test
     void renameMethodShouldSetNewNameCorrectly() {
-        FileRenameDto file = new FileRenameDto("old/path/file.txt", "newfile.txt");
+        ItemRenameDto file = new ItemRenameDto("old/path/file.txt", "newfile.txt");
 
         fileService.rename(file);
 

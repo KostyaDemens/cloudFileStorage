@@ -53,8 +53,7 @@ public class MainPageController {
 
         model.addAttribute("itemDto", items);
 
-        return "main";
-
+        return "search";
     }
 
 }

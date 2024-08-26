@@ -13,10 +13,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.InputStream;
+import java.nio.file.FileAlreadyExistsException;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,12 +44,19 @@ public class FileController {
     }
 
     @PatchMapping("/rename")
-    public String rename(@ModelAttribute ItemRenameDto item) {
-
-        fileService.rename(item);
+    public String rename(@ModelAttribute ItemRenameDto item,
+                         RedirectAttributes redirectAttributes) {
 
         ItemPath path = new ItemPath(item.getNewPath());
         String params = path.getPathWithoutUserAndCurrentFolder();
+
+        try {
+            fileService.rename(item);
+        } catch (FileAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exist");
+            return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+        }
+
 
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
