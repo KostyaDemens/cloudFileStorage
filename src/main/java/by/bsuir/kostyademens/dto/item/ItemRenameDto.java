@@ -13,7 +13,7 @@ public class ItemRenameDto implements Serializable {
 
     private String oldPath;
 
-    @Pattern(regexp = "^[a-zA-Z! -]*$", message = "File name should contain only english letters")
+    @Pattern(regexp = "^[a-zA-Z.!-]+(?!\\s)$", message = "File name should contain only english letters")
     @NotEmpty
     private String newPath;
 }

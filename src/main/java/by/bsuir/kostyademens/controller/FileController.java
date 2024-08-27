@@ -48,7 +48,7 @@ public class FileController {
     public String getRenameForm(@ModelAttribute ItemRenameDto renameDto,
                                 Model model) {
         model.addAttribute("renameDto", renameDto);
-        return "rename";
+        return "fileRename";
     }
 
     @PatchMapping("/rename")
@@ -61,7 +61,7 @@ public class FileController {
 
 
         if (bindingResult.hasErrors()) {
-            return "rename";
+            return "fileRename";
         }
 
         try {
@@ -71,7 +71,6 @@ public class FileController {
             redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exist");
             return "redirect:/file/rename?" + renameDto.getOldPath();
         }
-
 
     }
 

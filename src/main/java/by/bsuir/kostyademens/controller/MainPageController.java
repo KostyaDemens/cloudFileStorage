@@ -3,6 +3,7 @@ package by.bsuir.kostyademens.controller;
 import by.bsuir.kostyademens.dto.item.ItemDto;
 import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.ItemService;
+import by.bsuir.kostyademens.service.SimpleStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.util.List;
 public class MainPageController {
 
     private final ItemService itemService;
+
 
     @GetMapping
     public String mainPage(

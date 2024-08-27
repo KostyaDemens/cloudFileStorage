@@ -10,7 +10,6 @@ import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,35 +20,56 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FolderService {
 
-    //TODO Обработать ошибки
 
     private final SimpleStorageService storageService;
     private final ItemService itemService;
 
-    @SneakyThrows
-    public void rename(ItemRenameDto folder) {
-        folder.setNewPath(getFolderPrefix(folder.getOldPath()) + folder.getNewPath() + "/");
+
+    public void rename(ItemRenameDto folder) throws FolderAlreadyExistsException {
+
+        String folderPath = getFolderPrefix(folder.getOldPath());
+
+        String newPath = getFolderPrefix(folder.getOldPath()) + folder.getNewPath() + "/";
+
+        folder.setNewPath(newPath);
+
+        if (itemService.isItemAlreadyExist(folderPath, newPath)) {
+            throw new FolderAlreadyExistsException("Folder with such name already exist");
+        }
 
         Iterable<Result<Item>> items = storageService.getAllFiles(folder.getOldPath(), true);
 
-        for (Result<Item> item : items) {
+        try {
+            for (Result<Item> item : items) {
 
-            String oldItemPath = item.get().objectName();
+                String oldItemPath = item.get().objectName();
+                String newItemPath;
 
-            String newItemPath = oldItemPath.replace(folder.getOldPath(), folder.getNewPath());
+                if (folder.getOldPath().isEmpty()) {
+                    newItemPath = folder.getNewPath();
+                } else {
+                    newItemPath = oldItemPath.replace(folder.getOldPath(), folder.getNewPath());
+                }
 
-            storageService.renameFile(newItemPath, oldItemPath);
+                storageService.renameFile(newItemPath, oldItemPath);
+            }
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to find file");
         }
     }
 
-    @SneakyThrows
+
     public void delete(ItemDeleteDto item) {
         String prefix = getFolderPrefix(item.getFullPath());
 
         Iterable<Result<Item>> items = storageService.getAllFiles(item.getFullPath(), true);
 
-        for (Result<Item> itemResult : items) {
-            storageService.deleteFile(itemResult.get().objectName());
+        try {
+            for (Result<Item> itemResult : items) {
+                storageService.deleteFile(itemResult.get().objectName());
+            }
+        } catch (Exception e) {
+            throw new MinioOperationException("Failed to find file");
         }
 
         if (!items.iterator().hasNext()) {
@@ -59,6 +79,7 @@ public class FolderService {
 
     public void createFolder(FolderCreateDto folder) throws FolderAlreadyExistsException {
         String userFolder = UserPathUtil.getUserRootPassword(folder.getOwnerId());
+
         String folderLocation = userFolder + folder.getFolderLocation();
 
         String folderNewName = userFolder + folder.getFolderLocation() + folder.getName() + "/";
@@ -67,7 +88,7 @@ public class FolderService {
             throw new FolderAlreadyExistsException("Folder with such name already exits");
         }
 
-        folder.setFolderLocation(folderLocation);
+        folder.setFolderLocation(folderLocation + "/");
 
         storageService.uploadEmptyFolder(folderNewName);
     }

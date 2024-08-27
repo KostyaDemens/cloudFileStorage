@@ -14,12 +14,12 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="renameFileModalLabel">Rename File</h5>
+                <h5 class="modal-title" id="renameFileModalLabel">Rename folder</h5>
             </div>
             <div class="modal-body">
-                <form id="renameFileForm" th:action="@{/file/rename}" th:method="PATCH" th:object="${renameDto}">
+                <form id="renameFileForm" th:action="@{/folder/rename}" th:method="PATCH" th:object="${renameDto}">
                     <div class="mb-3">
-                        <label for="newFileName" class="form-label">New file name</label>
+                        <label for="newFileName" class="form-label">Enter new folder name</label>
                         <input type="text" class="form-control" id="newFileName" th:name="newPath" required>
                         <div style="color: red" th:if="${#fields.hasErrors('newPath')}" th:errors="*{newPath}">New name error</div>
                         <div style="color: red" th:if="${errorMessage}" th:text="${errorMessage}">Error text</div>

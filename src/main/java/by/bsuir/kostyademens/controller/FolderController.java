@@ -26,14 +26,34 @@ public class FolderController {
     private final FolderService folderService;
 
 
-    @PatchMapping("/rename")
-    public String rename(@ModelAttribute ItemRenameDto item) {
-        folderService.rename(item);
+    @GetMapping("/rename")
+    public String getRenameForm(@ModelAttribute ItemRenameDto renameDto,
+                                Model model) {
+        model.addAttribute("renameDto", renameDto);
+        return "folderRename";
+    }
 
-        ItemPath path = new ItemPath(item.getNewPath());
+    @PatchMapping("/rename")
+    public String rename(@ModelAttribute("renameDto") @Valid ItemRenameDto renameDto,
+                         BindingResult bindingResult,
+                         RedirectAttributes redirectAttributes) {
+
+        ItemPath path = new ItemPath(renameDto.getNewPath());
         String params = path.getPathWithoutUserAndCurrentFolder();
 
-        return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+
+        if (bindingResult.hasErrors()) {
+            return "folderRename";
+        }
+
+        try {
+            folderService.rename(renameDto);
+            return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+        } catch (FolderAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exist");
+            return "redirect:/folder/rename?" + renameDto.getOldPath();
+        }
+
     }
 
     @DeleteMapping("/delete")
@@ -50,7 +70,9 @@ public class FolderController {
     public String getUploadForm(@ModelAttribute FolderCreateDto folderDto,
                                 Model model) {
 
-        model.addAttribute("folderDto", folderDto);
+        if (!model.containsAttribute("folderDto")) {
+            model.addAttribute("folderDto", folderDto);
+        }
         return "create";
     }
 
@@ -59,10 +81,9 @@ public class FolderController {
                       BindingResult bindingResult,
                       RedirectAttributes redirectAttributes) {
 
-        ItemPath path = new ItemPath(folder.getFolderLocation());
-        String params = path.getPathWithoutUserAndCurrentFolder();
 
         if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("folderDto", folder);
             return "create";
         }
 
@@ -70,12 +91,14 @@ public class FolderController {
             folderService.createFolder(folder);
         } catch (FolderAlreadyExistsException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Folder with such name already exists");
+            redirectAttributes.addFlashAttribute("folderDto", folder);
             return "redirect:/folder/add?" + folder.getFolderLocation() + folder.getOwnerId();
         }
 
+        ItemPath path = new ItemPath(folder.getFolderLocation());
+        String params = path.getPathWithoutUserAndCurrentFolder();
+
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
-
-
     }
 
 
