@@ -2,7 +2,6 @@ package by.bsuir.kostyademens.service;
 
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
-import by.bsuir.kostyademens.dto.item.ItemDto;
 import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import by.bsuir.kostyademens.exception.MinioOperationException;
 import by.bsuir.kostyademens.util.UserPathUtil;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -22,8 +20,9 @@ public class FileService {
     private final SimpleStorageService storageService;
 
     public void rename(ItemRenameDto item) throws FileAlreadyExistsException {
+        String extension = getFileExtension(item.getOldPath());
 
-        String newPath = getFilePrefix(item.getOldPath()) + item.getNewPath();
+        String newPath = getFilePrefix(item.getOldPath()) + item.getNewPath() + extension;
 
         item.setNewPath(newPath);
 
@@ -66,6 +65,10 @@ public class FileService {
             throw new MinioOperationException("Failed to find file");
         }
         return false;
+    }
+
+    private String getFileExtension(String fileName) {
+        return fileName.substring(fileName.lastIndexOf("."));
     }
 
     private String getFilePrefix(String path) {

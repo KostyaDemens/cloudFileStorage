@@ -7,6 +7,7 @@ import by.bsuir.kostyademens.dto.item.ItemRenameDto;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FileService;
 import by.bsuir.kostyademens.service.SimpleStorageService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -38,27 +40,39 @@ public class FileController {
             httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(item.getName()).build().toString());
             return ResponseEntity.ok().headers(httpHeaders).body(stream.readAllBytes());
         } catch (Exception e) {
-            //TODO Обработать исключение
             throw new RuntimeException();
         }
     }
 
+    @GetMapping("/rename")
+    public String getRenameForm(@ModelAttribute ItemRenameDto renameDto,
+                                Model model) {
+        model.addAttribute("renameDto", renameDto);
+        return "rename";
+    }
+
     @PatchMapping("/rename")
-    public String rename(@ModelAttribute ItemRenameDto item,
+    public String rename(@ModelAttribute("renameDto") @Valid ItemRenameDto renameDto,
+                         BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
-        ItemPath path = new ItemPath(item.getNewPath());
+        ItemPath path = new ItemPath(renameDto.getNewPath());
         String params = path.getPathWithoutUserAndCurrentFolder();
 
+
+        if (bindingResult.hasErrors()) {
+            return "rename";
+        }
+
         try {
-            fileService.rename(item);
+            fileService.rename(renameDto);
+            return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
         } catch (FileAlreadyExistsException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exist");
-            return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+            return "redirect:/file/rename?" + renameDto.getOldPath();
         }
 
 
-        return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
 
     @DeleteMapping("/delete")

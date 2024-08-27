@@ -8,6 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 
+import java.nio.file.FileAlreadyExistsException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -24,7 +26,7 @@ class FileServiceTest {
     private SimpleStorageService storageService;
 
     @Test
-    void renameMethodShouldSetNewNameCorrectly() {
+    void renameMethodShouldSetNewNameCorrectly() throws FileAlreadyExistsException {
         ItemRenameDto file = new ItemRenameDto("old/path/file.txt", "newfile.txt");
 
         fileService.rename(file);
