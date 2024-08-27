@@ -4,12 +4,17 @@ import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemRenameDto;
+import by.bsuir.kostyademens.exception.FolderAlreadyExistsException;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FolderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -41,16 +46,38 @@ public class FolderController {
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
 
-    @PostMapping("/add")
-    public String add(@ModelAttribute FolderCreateDto folder) {
+    @GetMapping("/add")
+    public String getUploadForm(@ModelAttribute FolderCreateDto folderDto,
+                                Model model) {
 
-        folderService.createFolder(folder);
+        model.addAttribute("folderDto", folderDto);
+        return "create";
+    }
+
+    @PostMapping("/add")
+    public String add(@ModelAttribute("folderDto") @Valid FolderCreateDto folder,
+                      BindingResult bindingResult,
+                      RedirectAttributes redirectAttributes) {
 
         ItemPath path = new ItemPath(folder.getFolderLocation());
         String params = path.getPathWithoutUserAndCurrentFolder();
 
+        if (bindingResult.hasErrors()) {
+            return "create";
+        }
+
+        try {
+            folderService.createFolder(folder);
+        } catch (FolderAlreadyExistsException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Folder with such name already exists");
+            return "redirect:/folder/add?" + folder.getFolderLocation() + folder.getOwnerId();
+        }
+
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
+
+
     }
+
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files,

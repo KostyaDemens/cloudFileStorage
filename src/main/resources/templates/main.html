@@ -35,10 +35,15 @@
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="query" name="query">
                 <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
-            <!-- Button to trigger modal -->
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addFolderModal">
+
+            <!-- Button to add folder -->
+            <form th:action="@{/folder/add}" th:method="GET">
+                <input type="hidden" th:name="folderLocation" th:value="${url}">
+                <input type="hidden" th:name="ownerId" th:value="${owner.id}">
+            <button type="submit" class="btn btn-outline-primary">
                 Add Folder
             </button>
+            </form>
         </div>
     </div>
 </nav>

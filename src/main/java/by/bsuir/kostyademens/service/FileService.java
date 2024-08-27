@@ -18,6 +18,7 @@ import java.nio.file.FileAlreadyExistsException;
 public class FileService {
 
     private final SimpleStorageService storageService;
+    private final ItemService itemService;
 
     public void rename(ItemRenameDto item) throws FileAlreadyExistsException {
         String extension = getFileExtension(item.getOldPath());
@@ -26,7 +27,7 @@ public class FileService {
 
         item.setNewPath(newPath);
 
-        if (isFileAlreadyExists(getFilePrefix(item.getOldPath()), newPath)) {
+        if (itemService.isItemAlreadyExist(getFilePrefix(item.getOldPath()), newPath)) {
             throw new FileAlreadyExistsException("File with such name already exist");
         }
 
@@ -52,20 +53,6 @@ public class FileService {
         storageService.uploadFile(file, key);
     }
 
-    private boolean isFileAlreadyExists(String folderName, String fileName) {
-        Iterable<Result<Item>> items = storageService.getAllFiles(folderName, false);
-
-        try {
-            for (Result<Item> item : items) {
-                if (item.get().objectName().equals(fileName)) {
-                    return true;
-                }
-            }
-        }  catch (Exception e) {
-            throw new MinioOperationException("Failed to find file");
-        }
-        return false;
-    }
 
     private String getFileExtension(String fileName) {
         return fileName.substring(fileName.lastIndexOf("."));

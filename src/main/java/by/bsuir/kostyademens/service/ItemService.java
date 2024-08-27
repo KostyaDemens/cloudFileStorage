@@ -1,6 +1,7 @@
 package by.bsuir.kostyademens.service;
 
 import by.bsuir.kostyademens.dto.item.ItemDto;
+import by.bsuir.kostyademens.exception.MinioOperationException;
 import by.bsuir.kostyademens.model.BreadCrumb;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.model.path.MinioPath;
@@ -92,6 +93,21 @@ public class ItemService {
         }
         return itemDtos;
     }
+
+    public boolean isItemAlreadyExist(String folderName, String fileName) {
+            Iterable<Result<Item>> items = storageService.getAllFiles(folderName, false);
+
+            try {
+                for (Result<Item> item : items) {
+                    if (item.get().objectName().equalsIgnoreCase(fileName)) {
+                        return true;
+                    }
+                }
+            }  catch (Exception e) {
+                throw new MinioOperationException("Failed to find file");
+            }
+            return false;
+        }
 
 }
 

@@ -4,6 +4,8 @@ import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemRenameDto;
+import by.bsuir.kostyademens.exception.FolderAlreadyExistsException;
+import by.bsuir.kostyademens.exception.MinioOperationException;
 import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -22,6 +24,7 @@ public class FolderService {
     //TODO Обработать ошибки
 
     private final SimpleStorageService storageService;
+    private final ItemService itemService;
 
     @SneakyThrows
     public void rename(ItemRenameDto folder) {
@@ -54,14 +57,19 @@ public class FolderService {
         }
     }
 
-    public void createFolder(FolderCreateDto folder) {
+    public void createFolder(FolderCreateDto folder) throws FolderAlreadyExistsException {
         String userFolder = UserPathUtil.getUserRootPassword(folder.getOwnerId());
+        String folderLocation = userFolder + folder.getFolderLocation();
 
-        String folderLocation = userFolder + folder.getFolderLocation() + folder.getName();
+        String folderNewName = userFolder + folder.getFolderLocation() + folder.getName() + "/";
+
+        if (itemService.isItemAlreadyExist(folderLocation, folderNewName)) {
+            throw new FolderAlreadyExistsException("Folder with such name already exits");
+        }
 
         folder.setFolderLocation(folderLocation);
 
-        storageService.uploadEmptyFolder(folderLocation + "/");
+        storageService.uploadEmptyFolder(folderNewName);
     }
 
     public void upload(List<MultipartFile> files, FileUploadDto fileUpload) {
