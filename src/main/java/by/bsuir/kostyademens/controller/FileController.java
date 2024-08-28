@@ -90,6 +90,15 @@ public class FileController {
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
 
+    @GetMapping("/upload")
+    public String getUploadForm(@ModelAttribute FileUploadDto fileUploadDto,
+                                Model model) {
+
+        model.addAttribute("fileUpload", fileUploadDto);
+
+        return "component/fileUpload";
+    }
+
     @PostMapping("/upload")
     public String upload(@RequestParam("file") MultipartFile file,
                          @ModelAttribute FileUploadDto fileUpload) {
