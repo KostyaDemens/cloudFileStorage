@@ -23,7 +23,7 @@
                 <form id="uploadFileModalForm" th:method="POST" th:action="@{/file/upload}" enctype="multipart/form-data" th:object="${fileUpload}">
                     <div class="mb-3 drop-zone">
                         <span class="drop-zone__prompt">Drop file here or click to upload</span>
-                        <input type="file" name="file" class="drop-zone__input">
+                        <input type="file" name="file" class="drop-zone__input" multiple webkitdirectory>
                     </div>
                     <input type="hidden" th:name="path" th:value="${fileUpload.path}"/>
                     <input type="hidden" th:name="ownerId" th:value="${fileUpload.ownerId}"/>
