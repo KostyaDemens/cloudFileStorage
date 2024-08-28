@@ -1,0 +1,31 @@
+spring:
+  mvc:
+    hidden method:
+      filter:
+        enabled: true
+  application:
+    name: cloudFileStorageProd
+  data:
+    redis:
+      port: 6379
+  session:
+    timeout: 1800s
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://prod-db-host:3306/userdb_prod
+    username: prod_user
+    password: prod_password
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+
+minio:
+  url: https://minio.prod-domain.com
+  access:
+    key: ${MINIO_ACCESS_KEY_PROD}
+    secret: ${MINIO_SECRET_KEY_PROD}
+  bucket:
+    name: prod-user-files
+

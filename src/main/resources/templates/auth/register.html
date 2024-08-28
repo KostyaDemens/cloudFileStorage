@@ -3,18 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f8f9fa;
+        }
+        .registration-container {
+            width: 300px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .registration-container::before {
+            content: "";
+            display: block;
+            width: 100%;
+            height: 5px;
+            background-color: #007bff;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+    </style>
 </head>
 <body>
+<div class="registration-container">
     <form th:method="POST" th:object="${user}" th:action="@{/auth/registration}">
-        <label for="username">Enter username: </label>
-        <input type="text" th:field="*{username}" id="username"/>
-        <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
-        <br/>
-        <label for="password">Enter password: </label>
-        <input type="password" th:field="*{password}" id="password"/>
-        <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
-        <br/>
-        <input type="submit" value="Sign up!">
+        <div class="form-group">
+            <label for="username">Enter login: </label>
+            <input type="text" class="form-control" th:field="*{username}" id="username"/>
+            <div style="color: red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</div>
+        </div>
+        <div class="form-group">
+            <label for="password">Enter password: </label>
+            <input type="password" class="form-control" th:field="*{password}" id="password"/>
+            <div style="color: red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Sign up!</button>
     </form>
+</div>
 </body>
 </html>
