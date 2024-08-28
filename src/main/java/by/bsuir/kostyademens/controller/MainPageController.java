@@ -1,5 +1,6 @@
 package by.bsuir.kostyademens.controller;
 
+import by.bsuir.kostyademens.dto.file.FileSearchDto;
 import by.bsuir.kostyademens.dto.item.ItemDto;
 import by.bsuir.kostyademens.model.security.SecureUserDetails;
 import by.bsuir.kostyademens.service.ItemService;
@@ -51,9 +52,9 @@ public class MainPageController {
             return "redirect:/";
         }
 
-        List<ItemDto> items = itemService.search(query.toLowerCase(), userDetails.getUser());
+        List<FileSearchDto> files = itemService.search(query.toLowerCase(), userDetails.getUser());
 
-        model.addAttribute("itemDto", items);
+        model.addAttribute("files", files);
 
         return "search";
     }

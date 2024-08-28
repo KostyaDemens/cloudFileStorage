@@ -29,8 +29,12 @@ public class FolderController {
     @GetMapping("/rename")
     public String getRenameForm(@ModelAttribute ItemRenameDto renameDto,
                                 Model model) {
-        model.addAttribute("renameDto", renameDto);
-        return "folderRename";
+
+        if (!model.containsAttribute("renameDto")) {
+            model.addAttribute("renameDto", renameDto);
+        }
+
+        return "component/folderRename";
     }
 
     @PatchMapping("/rename")
@@ -38,12 +42,13 @@ public class FolderController {
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
-        ItemPath path = new ItemPath(renameDto.getNewPath());
+        ItemPath path = new ItemPath(renameDto.getOldPath());
         String params = path.getPathWithoutUserAndCurrentFolder();
 
 
         if (bindingResult.hasErrors()) {
-            return "folderRename";
+            redirectAttributes.addFlashAttribute("renameDto", renameDto);
+            return "component/folderRename";
         }
 
         try {
@@ -51,6 +56,7 @@ public class FolderController {
             return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
         } catch (FolderAlreadyExistsException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exist");
+            redirectAttributes.addFlashAttribute("renameDto", renameDto);
             return "redirect:/folder/rename?" + renameDto.getOldPath();
         }
 
@@ -73,7 +79,7 @@ public class FolderController {
         if (!model.containsAttribute("folderDto")) {
             model.addAttribute("folderDto", folderDto);
         }
-        return "create";
+        return "component/create";
     }
 
     @PostMapping("/add")
@@ -84,7 +90,7 @@ public class FolderController {
 
         if (bindingResult.hasErrors()) {
             redirectAttributes.addFlashAttribute("folderDto", folder);
-            return "create";
+            return "component/create";
         }
 
         try {

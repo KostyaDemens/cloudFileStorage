@@ -25,12 +25,12 @@ public class FileService {
 
         String newPath = getFilePrefix(item.getOldPath()) + item.getNewPath() + extension;
 
-        item.setNewPath(newPath);
 
         if (itemService.isItemAlreadyExist(getFilePrefix(item.getOldPath()), newPath)) {
             throw new FileAlreadyExistsException("File with such name already exist");
         }
 
+        item.setNewPath(newPath);
 
         storageService.renameFile(item.getNewPath(), item.getOldPath());
     }

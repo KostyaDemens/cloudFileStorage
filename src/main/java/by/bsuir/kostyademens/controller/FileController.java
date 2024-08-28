@@ -47,8 +47,12 @@ public class FileController {
     @GetMapping("/rename")
     public String getRenameForm(@ModelAttribute ItemRenameDto renameDto,
                                 Model model) {
-        model.addAttribute("renameDto", renameDto);
-        return "fileRename";
+
+        if (!model.containsAttribute("renameDto")) {
+            model.addAttribute("renameDto", renameDto);
+        }
+
+        return "component/fileRename";
     }
 
     @PatchMapping("/rename")
@@ -56,12 +60,13 @@ public class FileController {
                          BindingResult bindingResult,
                          RedirectAttributes redirectAttributes) {
 
-        ItemPath path = new ItemPath(renameDto.getNewPath());
+        ItemPath path = new ItemPath(renameDto.getOldPath());
         String params = path.getPathWithoutUserAndCurrentFolder();
 
 
         if (bindingResult.hasErrors()) {
-            return "fileRename";
+            redirectAttributes.addFlashAttribute("renameDto", renameDto);
+            return "component/fileRename";
         }
 
         try {
@@ -69,6 +74,7 @@ public class FileController {
             return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
         } catch (FileAlreadyExistsException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "File with such name already exist");
+            redirectAttributes.addFlashAttribute("renameDto", renameDto);
             return "redirect:/file/rename?" + renameDto.getOldPath();
         }
 
