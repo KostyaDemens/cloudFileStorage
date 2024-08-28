@@ -3,7 +3,6 @@ package by.bsuir.kostyademens.service;
 import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemRenameDto;
-import by.bsuir.kostyademens.exception.MinioOperationException;
 import by.bsuir.kostyademens.util.UserPathUtil;
 import io.minio.Result;
 import io.minio.messages.Item;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.FileAlreadyExistsException;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -47,10 +47,11 @@ public class FileService {
         }
     }
 
-    public void upload(MultipartFile file, FileUploadDto fileUpload) {
-        String key = UserPathUtil.getUserRootPassword(fileUpload.getOwnerId()) + fileUpload.getPath();
-
-        storageService.uploadFile(file, key);
+    public void upload(List<MultipartFile> files, FileUploadDto fileUpload) {
+        for (MultipartFile file : files) {
+            String key = UserPathUtil.getUserRootPassword(fileUpload.getOwnerId()) + fileUpload.getPath();
+            storageService.uploadFile(file, key);
+        }
     }
 
 

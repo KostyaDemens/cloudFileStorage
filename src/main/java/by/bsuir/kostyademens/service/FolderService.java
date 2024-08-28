@@ -4,6 +4,7 @@ import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemRenameDto;
+import by.bsuir.kostyademens.exception.EmptyFolderException;
 import by.bsuir.kostyademens.exception.FolderAlreadyExistsException;
 import by.bsuir.kostyademens.exception.MinioOperationException;
 import by.bsuir.kostyademens.util.UserPathUtil;
@@ -93,9 +94,12 @@ public class FolderService {
         storageService.uploadEmptyFolder(folderNewName);
     }
 
-    public void upload(List<MultipartFile> files, FileUploadDto fileUpload) {
+    public void upload(List<MultipartFile> files, FileUploadDto fileUpload) throws EmptyFolderException {
         String key = UserPathUtil.getUserRootPassword(fileUpload.getOwnerId()) + fileUpload.getPath();
         for (MultipartFile file : files) {
+            if (file.getOriginalFilename() == null || file.getOriginalFilename().isEmpty()) {
+                throw new EmptyFolderException("It seems that you are trying to upload an empty folder");
+            }
             storageService.uploadFile(file, key);
         }
     }

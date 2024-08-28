@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload File Modal</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/dropDown.css">
+</head>
+<body>
+
+<!-- Modal -->
+<div class="modal show d-block" id="uploadFileModal" tabindex="-1" aria-labelledby="uploadFileModalLabel" aria-hidden="true" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="uploadFileModalLabel">Upload File</h5>
+      </div>
+      <div class="modal-body">
+        <form id="uploadFileModalForm" th:method="POST" th:action="@{/folder/upload}" enctype="multipart/form-data" th:object="${folderUpload}">
+          <div class="mb-3">
+            <label for="fileInput" class="form-label">Choose folder</label>
+            <input type="file" id="fileInput" name="files" class="form-control" multiple webkitdirectory>
+          </div>
+          <input type="hidden" th:name="path" th:value="${folderUpload.path}"/>
+          <input type="hidden" th:name="ownerId" th:value="${folderUpload.ownerId}"/>
+          <div style="color: red" th:if="${errorMessage}" th:text="${errorMessage}">Error text</div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Cancel</button>
+        <button type="submit" form="uploadFileModalForm" class="btn btn-primary">Upload</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

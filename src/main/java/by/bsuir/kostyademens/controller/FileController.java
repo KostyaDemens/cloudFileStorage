@@ -101,10 +101,10 @@ public class FileController {
     }
 
     @PostMapping("/upload")
-    public String upload(@RequestParam("file") MultipartFile file,
+    public String upload(@RequestParam("files") List<MultipartFile> files,
                          @ModelAttribute FileUploadDto fileUpload) {
 
-        fileService.upload(file, fileUpload);
+        fileService.upload(files, fileUpload);
 
         return "redirect:/" + ((fileUpload.getPath().isEmpty() ? "" : "?path=" + fileUpload.getPath()));
     }

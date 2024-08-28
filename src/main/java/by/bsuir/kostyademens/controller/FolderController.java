@@ -4,6 +4,7 @@ import by.bsuir.kostyademens.dto.file.FileUploadDto;
 import by.bsuir.kostyademens.dto.folder.FolderCreateDto;
 import by.bsuir.kostyademens.dto.item.ItemDeleteDto;
 import by.bsuir.kostyademens.dto.item.ItemRenameDto;
+import by.bsuir.kostyademens.exception.EmptyFolderException;
 import by.bsuir.kostyademens.exception.FolderAlreadyExistsException;
 import by.bsuir.kostyademens.model.path.ItemPath;
 import by.bsuir.kostyademens.service.FolderService;
@@ -107,12 +108,29 @@ public class FolderController {
         return "redirect:/" + ((params.isEmpty() ? "" : "?path=" + params));
     }
 
+    @GetMapping("/upload")
+    public String getUploadForm(@ModelAttribute FileUploadDto fileUploadDto,
+                                Model model) {
+
+        if (!model.containsAttribute("folderUpload")) {
+            model.addAttribute("folderUpload", fileUploadDto);
+        }
+
+        return "component/folderUpload";
+    }
 
     @PostMapping("/upload")
     public String upload(@RequestParam("files") List<MultipartFile> files,
-                         @ModelAttribute FileUploadDto fileUpload) {
+                         @ModelAttribute FileUploadDto fileUpload,
+                         RedirectAttributes redirectAttributes) {
 
-        folderService.upload(files, fileUpload);
+        try {
+            folderService.upload(files, fileUpload);
+        } catch (EmptyFolderException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("folderUpload", fileUpload);
+            return "redirect:/folder/upload?" + fileUpload.getPath() + fileUpload.getOwnerId();
+        }
 
         return "redirect:/" + ((fileUpload.getPath().isEmpty() ? "" : "?path=" + fileUpload.getPath()));
     }
