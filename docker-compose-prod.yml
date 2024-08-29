@@ -1,13 +1,12 @@
 version: '3.3'
 services:
   mysql:
-    image: mysql:9.0
+    image: mysql:latest
     environment:
-      - MYSQL_DATABASE=userdb
-      - MYSQL_USER=admin
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_PASSWORD=password
-      - MYSQL_PORT=3306
+      - MYSQL_DATABASE=cloudstorage
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
@@ -16,8 +15,8 @@ services:
   minio:
     image: minio/minio:latest
     environment:
-      - MINIO_ROOT_USER=kostya
-      - MINIO_ROOT_PASSWORD=password
+      - MINIO_ROOT_USER=${MINIO_USER}
+      - MINIO_ROOT_PASSWORD=${MINIO_PASSWORD}
       - MINIO_DEFAULT_BUCKETS=user-files
     ports:
       - "9000:9000"
@@ -32,3 +31,12 @@ services:
       - "6379:6379"
     volumes:
       - ./redis_data:/data
+
+  app:
+    image: kostyadem/cloudstorage:latest
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - minio
+      - redis
