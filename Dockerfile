@@ -8,4 +8,4 @@ WORKDIR /app
 COPY target/cloudFileStorage-3.3.2.jar app.jar
 
 # Указываем команду для запуска приложения
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]

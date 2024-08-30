@@ -14,19 +14,17 @@ services:
     environment:
       - MYSQL_DATABASE=cloudstorage
       - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_PORT=3306
-
   minio:
     image: minio/minio:latest
     environment:
-      - MINIO_ROOT_USER=${MINIO_USER}
+      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
       - MINIO_DEFAULT_BUCKETS=user-files
-
+    ports:
+      - "9001:9001"
     command: server /data --console-address ":9001"
 
   redis:
     image: redis:latest
-
