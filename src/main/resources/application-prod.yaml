@@ -1,35 +1,21 @@
 spring:
-  config:
-    import: optional:file:.env[.properties]
-  mvc:
-    hidden-method:
-      filter:
-        enabled: true
-  application:
-    name: cloudFileStorageProd
   data:
     redis:
       port: 6379
-  session:
-    timeout: 1800s
+      host: redis
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/cloudstorage
+    url: jdbc:mysql://mysql:3306/${MYSQL_DATABASE}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-        boot:
-          allow_jdbc_metadata_access: false
+    show-sql: true
 
 minio:
   url: http://minio:9000
   access:
     key: ${MINIO_ACCESS_KEY}
-    secret: ${MINIO_SECRET_KEY}
+    secret: ${MINIO_ACCESS_SECRET}
   bucket:
     name: user-files

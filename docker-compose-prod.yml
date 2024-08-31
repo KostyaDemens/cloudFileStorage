@@ -1,30 +1,54 @@
-version: '3.3'
+version: '3.8'
+
 services:
   app:
-    image: kostyadem/cloudstorage:latest
-    environment:
-      - SPRING_PROFILES_ACTIVE=prod
+    image: cloudfilestorage:latest
+    container_name: app-container
+    ports:
+      - "8080:8080"
     depends_on:
       - mysql
-      - minio
       - redis
+      - minio
+    env_file:
+      - .env
+    networks:
+      - app-network
+    restart: always
 
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
+    container_name: mysql-container
     environment:
-      - MYSQL_DATABASE=cloudstorage
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-  minio:
-    image: minio/minio:latest
-    environment:
-      - MINIO_ROOT_USER=${MINIO_ROOT_USER}
-      - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}
-      - MINIO_DEFAULT_BUCKETS=user-files
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "9001:9001"
-    command: server /data --console-address ":9001"
+      - "3306:3306"
+    networks:
+      - app-network
 
   redis:
     image: redis:latest
+    container_name: redis-container
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio-container
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
+    ports:
+      - "9000:9000"
+    command: server /data
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
