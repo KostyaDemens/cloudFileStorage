@@ -23,20 +23,6 @@ public class SimpleStorageService {
     @Value("${minio.bucket.name}")
     private String bucketName;
 
-
-    @PostConstruct
-    private void init() {
-        try {
-            boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
-            if (!found) {
-                minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
-            }
-        } catch (Exception e) {
-            throw new BucketInitializationException("Failed to initialize bucket: " + bucketName);
-        }
-    }
-
-
     public void createUserFolder(Long id) {
         try {
             minioClient.putObject(

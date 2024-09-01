@@ -2,23 +2,27 @@ version: '3.8'
 
 services:
   app:
-    image: cloudfilestorage:latest
+    image: kostyadem/cloudstorage:latest
     container_name: app-container
     ports:
       - "8080:8080"
-    depends_on:
-      - mysql
-      - redis
-      - minio
     env_file:
       - .env
-    networks:
-      - app-network
     restart: always
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   mysql:
     image: mysql:8.0
     container_name: mysql-container
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "mysql", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
@@ -26,16 +30,17 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - "3306:3306"
-    networks:
-      - app-network
 
   redis:
     image: redis:latest
     container_name: redis-container
     ports:
       - "6379:6379"
-    networks:
-      - app-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   minio:
     image: minio/minio:latest
@@ -46,9 +51,3 @@ services:
     ports:
       - "9000:9000"
     command: server /data
-    networks:
-      - app-network
-
-networks:
-  app-network:
-    driver: bridge
